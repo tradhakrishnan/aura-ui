@@ -1,0 +1,275 @@
+/* ── Section wrapper ── */
+.tap-section {
+  margin-top: 2rem;
+  padding: 1.25rem 1rem;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 16px;
+}
+
+/* ── Section header ── */
+.tap-section-header {
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+
+.tap-section-eyebrow {
+  display: inline-block;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: #f59e0b;
+  background: rgba(245, 158, 11, 0.1);
+  border: 1px solid rgba(245, 158, 11, 0.25);
+  padding: 3px 14px;
+  border-radius: 99px;
+  margin-bottom: 0.75rem;
+}
+
+.tap-section-title {
+  font-size: 1.75rem;
+  font-weight: 800;
+  color: #f1f5f9;
+  letter-spacing: -0.02em;
+  margin-bottom: 0.6rem;
+}
+
+.tap-section-desc {
+  max-width: 640px;
+  margin: 0 auto;
+  color: #64748b;
+  font-size: 0.875rem;
+  line-height: 1.65;
+}
+
+/* ── Main diagram row ── */
+.tap-diagram {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0;
+}
+
+/* ── Client columns ── */
+.tap-clients-col {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  flex: 1;
+  max-width: 300px;
+}
+
+.tap-col-label {
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-bottom: 4px;
+  padding: 0 4px;
+}
+
+.tap-col-label--feed    { color: #f59e0b; text-align: right; }
+.tap-col-label--consume { color: #60a5fa; text-align: left; }
+
+/* ── Client row (card + arrow) ── */
+.tap-client-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.tap-client-row--left  { flex-direction: row; justify-content: flex-end; }
+.tap-client-row--right { flex-direction: row-reverse; justify-content: flex-end; }
+
+/* ── Arrow wrapper ── */
+.tap-arrow-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  flex-shrink: 0;
+}
+
+.tap-arrow {
+  display: block;
+}
+
+.tap-flow-label {
+  font-size: 0.55rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.tap-flow-label--feed          { color: #f59e0b; }
+.tap-flow-label--consume       { color: #60a5fa; }
+.tap-flow-label--bidirectional { color: #a78bfa; }
+
+/* ── Client card ── */
+.tap-client-card {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 11px;
+  border-radius: 8px;
+  min-width: 165px;
+  transition: transform 0.15s, box-shadow 0.15s;
+  cursor: default;
+}
+
+.tap-client-card:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+}
+
+.tap-client-card--feed {
+  background: rgba(245, 158, 11, 0.07);
+  border: 1px solid rgba(245, 158, 11, 0.3);
+}
+
+.tap-client-card--consume {
+  background: rgba(96, 165, 250, 0.07);
+  border: 1px solid rgba(96, 165, 250, 0.3);
+}
+
+.tap-client-card--bidirectional {
+  background: rgba(167, 139, 250, 0.07);
+  border: 1px solid rgba(167, 139, 250, 0.3);
+}
+
+.tap-client-icon {
+  font-size: 1.15rem;
+  flex-shrink: 0;
+}
+
+.tap-client-name {
+  font-size: 0.74rem;
+  font-weight: 700;
+  color: #e2e8f0;
+  margin-bottom: 1px;
+}
+
+.tap-client-desc {
+  font-size: 0.61rem;
+  color: #64748b;
+  line-height: 1.25;
+}
+
+/* ── TAP Core ── */
+.tap-core {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex-shrink: 0;
+  position: relative;
+  padding: 0 1.5rem;
+}
+
+.tap-core-pulse {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -60%);
+  width: 140px;
+  height: 140px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(192, 132, 252, 0.12) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.tap-core-inner {
+  position: relative;
+  background: linear-gradient(135deg, rgba(192,132,252,0.12), rgba(99,102,241,0.12));
+  border: 2px solid rgba(192, 132, 252, 0.45);
+  border-radius: 14px;
+  padding: 14px 18px;
+  text-align: center;
+  min-width: 118px;
+  box-shadow: 0 0 32px rgba(192, 132, 252, 0.15);
+}
+
+.tap-core-icon {
+  font-size: 1.6rem;
+  margin-bottom: 4px;
+}
+
+.tap-core-title {
+  font-size: 1.65rem;
+  font-weight: 900;
+  letter-spacing: 0.06em;
+  background: linear-gradient(135deg, #c084fc, #818cf8);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  line-height: 1;
+  margin-bottom: 4px;
+}
+
+.tap-core-subtitle {
+  font-size: 0.65rem;
+  color: #94a3b8;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  margin-bottom: 10px;
+}
+
+.tap-core-badges {
+  display: flex;
+  gap: 4px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.tap-core-badge {
+  font-size: 0.58rem;
+  font-weight: 600;
+  color: #c084fc;
+  background: rgba(192, 132, 252, 0.1);
+  border: 1px solid rgba(192, 132, 252, 0.25);
+  border-radius: 4px;
+  padding: 2px 7px;
+}
+
+/* AURA link below TAP */
+.tap-aura-link {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  margin-top: 2px;
+}
+
+.tap-aura-link-label {
+  font-size: 0.6rem;
+  color: #a78bfa;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+}
+
+/* ── Legend ── */
+.tap-legend {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 2rem;
+  margin-top: 2rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.tap-legend-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.72rem;
+  color: #64748b;
+}
+
+.tap-legend-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}

@@ -1,0 +1,620 @@
+/* ── Section header ── */
+.fd-section-header {
+  text-align: center;
+  margin-bottom: 2.5rem;
+}
+
+.fd-section-eyebrow {
+  display: inline-block;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: #a78bfa;
+  background: rgba(167, 139, 250, 0.1);
+  border: 1px solid rgba(167, 139, 250, 0.25);
+  padding: 3px 14px;
+  border-radius: 99px;
+  margin-bottom: 0.75rem;
+}
+
+.fd-section-title {
+  font-size: 1.75rem;
+  font-weight: 800;
+  color: #f1f5f9;
+  letter-spacing: -0.02em;
+  margin-bottom: 0.6rem;
+}
+
+.fd-section-desc {
+  max-width: 640px;
+  margin: 0 auto;
+  color: #64748b;
+  font-size: 0.875rem;
+  line-height: 1.65;
+}
+
+/* ── Container ── */
+.fd-container {
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 16px;
+  padding: 1.25rem 1rem;
+  overflow-x: auto;
+}
+
+/* ── Diagram row ── */
+.fd-diagram {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  width: 100%;
+}
+
+/* ── Shared column ── */
+.fd-column {
+  flex-shrink: 0;
+}
+
+/* ─────────────────────────────────────────
+   DATA SOURCES
+───────────────────────────────────────── */
+.fd-sources {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  width: 168px;
+}
+
+.fd-source-box {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(245, 158, 11, 0.35);
+  border-radius: 8px;
+  padding: 7px 9px;
+  transition: border-color 0.2s;
+}
+
+.fd-source-box:hover {
+  border-color: rgba(245, 158, 11, 0.6);
+}
+
+.fd-source-icon {
+  font-size: 1.05rem;
+  flex-shrink: 0;
+}
+
+.fd-source-title {
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: #e2e8f0;
+  margin-bottom: 3px;
+}
+
+.fd-source-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 3px;
+}
+
+.fd-chip {
+  font-size: 0.58rem;
+  color: #94a3b8;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 3px;
+  padding: 1px 5px;
+}
+
+/* ─────────────────────────────────────────
+   ARROWS
+───────────────────────────────────────── */
+.fd-arrow-col {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  flex-shrink: 0;
+}
+
+.fd-arrow-col--wide {
+  width: 58px;
+}
+
+.fd-arrow {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.fd-arrow-right {
+  flex-direction: row;
+}
+
+.fd-arrow-label {
+  font-size: 0.6rem;
+  font-weight: 500;
+  text-align: center;
+  white-space: nowrap;
+}
+
+.fd-arrow-label-text {
+  font-size: 0.55rem;
+  color: #64748b;
+  text-align: center;
+  margin-bottom: 3px;
+  line-height: 1.2;
+}
+
+.fd-dual-arrow {
+  width: 82px;
+  gap: 14px;
+  justify-content: center;
+}
+
+.fd-evidence-arrow {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+}
+
+.fd-evidence-label {
+  font-size: 0.52rem;
+  font-weight: 500;
+  text-align: center;
+  line-height: 1.15;
+}
+
+/* ─────────────────────────────────────────
+   TECH SUPPORT TEAM
+───────────────────────────────────────── */
+.fd-support-team {
+  width: 158px;
+}
+
+.fd-team-wrapper {
+  border: 1.5px solid rgba(245, 158, 11, 0.4);
+  border-radius: 10px;
+  padding: 10px 9px;
+  background: rgba(245, 158, 11, 0.03);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+
+.fd-researcher-box {
+  width: 100%;
+  border-radius: 8px;
+  padding: 9px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.fd-green {
+  background: rgba(34, 197, 94, 0.08);
+  border: 1.5px solid rgba(34, 197, 94, 0.4);
+}
+
+.fd-red {
+  background: rgba(239, 68, 68, 0.08);
+  border: 1.5px solid rgba(239, 68, 68, 0.35);
+}
+
+.fd-researcher-icon {
+  font-size: 1.1rem;
+}
+
+.fd-researcher-label {
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-align: center;
+  line-height: 1.2;
+}
+
+.fd-researcher-label.green { color: #4ade80; }
+.fd-researcher-label.red   { color: #f87171; }
+
+.fd-discussion-pill {
+  font-size: 0.62rem;
+  color: #94a3b8;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 99px;
+  padding: 2px 9px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.fd-team-label {
+  margin-top: 5px;
+  text-align: center;
+  font-size: 0.62rem;
+  font-weight: 600;
+  color: #f59e0b;
+  letter-spacing: 0.04em;
+}
+
+/* ─────────────────────────────────────────
+   TECH LEAD
+───────────────────────────────────────── */
+.fd-tech-lead {
+  width: 128px;
+}
+
+.fd-lead-wrapper {
+  border: 1.5px solid rgba(167, 139, 250, 0.45);
+  border-radius: 10px;
+  padding: 11px 9px;
+  background: rgba(167, 139, 250, 0.05);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+  height: 100%;
+}
+
+.fd-person-avatar {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.06);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.fd-lead-title {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: #c4b5fd;
+}
+
+.fd-lead-subtitle {
+  font-size: 0.65rem;
+  color: #a78bfa;
+}
+
+.fd-ai-badge {
+  margin-top: 3px;
+  font-size: 0.56rem;
+  color: #94a3b8;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 5px;
+  padding: 3px 6px;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  gap: 3px;
+}
+
+/* ─────────────────────────────────────────
+   RISK MANAGEMENT
+───────────────────────────────────────── */
+.fd-risk {
+  width: 150px;
+}
+
+.fd-risk-header {
+  background: #1d4ed8;
+  border-radius: 8px 8px 0 0;
+  padding: 6px 10px;
+  text-align: center;
+  font-size: 0.62rem;
+  font-weight: 700;
+  color: #fff;
+  letter-spacing: 0.04em;
+}
+
+.fd-risk-body {
+  background: rgba(29, 78, 216, 0.08);
+  border: 1px solid rgba(29, 78, 216, 0.3);
+  border-top: none;
+  border-radius: 0 0 8px 8px;
+  padding: 7px 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.fd-risk-row {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 6px;
+  padding: 5px 8px;
+}
+
+.fd-risk-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.fd-risk-name {
+  font-size: 0.7rem;
+  font-weight: 600;
+}
+
+/* ─────────────────────────────────────────
+   PRODUCT OWNER + EXECUTION
+───────────────────────────────────────── */
+.fd-po-exec {
+  width: 128px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0;
+}
+
+.fd-po-box {
+  width: 128px;
+  background: rgba(96, 165, 250, 0.06);
+  border: 1.5px solid rgba(96, 165, 250, 0.35);
+  border-radius: 10px;
+  padding: 10px 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+
+.fd-po-title {
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: #93c5fd;
+}
+
+.fd-exec-box {
+  width: 110px;
+  background: linear-gradient(135deg, #1d4ed8, #1e40af);
+  border-radius: 10px;
+  padding: 11px 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  box-shadow: 0 4px 18px rgba(29, 78, 216, 0.35);
+  flex-shrink: 0;
+}
+
+.fd-exec-icon {
+  font-size: 1.1rem;
+}
+
+.fd-exec-title {
+  font-size: 0.85rem;
+  font-weight: 800;
+  color: #fff;
+  letter-spacing: 0.04em;
+}
+
+.fd-exec-subtitle {
+  font-size: 0.55rem;
+  color: rgba(255, 255, 255, 0.55);
+  text-align: center;
+}
+
+/* ─────────────────────────────────────────
+   TEAM OVERVIEW
+───────────────────────────────────────── */
+.fd-team-overview {
+  margin-top: 1.5rem;
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  background: rgba(255, 255, 255, 0.025);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 10px;
+  padding: 14px 18px;
+  max-width: 480px;
+}
+
+.fd-overview-title {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: #cbd5e1;
+  margin-bottom: 8px;
+}
+
+.fd-overview-rows {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.fd-overview-row {
+  font-size: 0.75rem;
+  color: #64748b;
+}
+
+.fd-overview-role {
+  font-weight: 600;
+  color: #94a3b8;
+}
+
+/* ── Vertical arrow ── */
+.fd-varrow {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  padding: 2px 0;
+}
+
+.fd-varrow-label {
+  font-size: 0.58rem;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: #64748b;
+}
+
+/* ── Right section ── */
+.fd-right-section {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  flex-shrink: 0;
+}
+
+/* ── Execution row ── */
+.fd-execution-row {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 5px;
+}
+
+/* ── Inline arrow ── */
+.fd-inline-arrow {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  flex-shrink: 0;
+}
+
+.fd-inline-label {
+  font-size: 0.52rem;
+  font-weight: 600;
+  white-space: nowrap;
+  letter-spacing: 0.03em;
+}
+
+/* ── Validation Agent ── */
+.fd-validation {
+  background: rgba(45, 212, 191, 0.06);
+  border: 1.5px solid rgba(45, 212, 191, 0.4);
+  border-radius: 8px;
+  padding: 8px 10px;
+  min-width: 148px;
+  flex-shrink: 0;
+}
+
+.fd-validation-header {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  margin-bottom: 6px;
+}
+
+.fd-validation-icon { font-size: 0.85rem; }
+
+.fd-validation-title {
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: #2dd4bf;
+}
+
+.fd-validation-checks {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  margin-bottom: 6px;
+}
+
+.fd-check-row {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.6rem;
+  color: #94a3b8;
+}
+
+.fd-check-icon {
+  color: #2dd4bf;
+  font-weight: 700;
+  font-size: 0.65rem;
+  flex-shrink: 0;
+}
+
+.fd-validation-result {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 0.58rem;
+  font-weight: 600;
+  color: #2dd4bf;
+  background: rgba(45, 212, 191, 0.08);
+  border-radius: 5px;
+  padding: 3px 6px;
+}
+
+.fd-result-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #2dd4bf;
+  animation: pulse-teal 1.8s infinite;
+  flex-shrink: 0;
+}
+
+@keyframes pulse-teal {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50%       { opacity: 0.4; transform: scale(0.7); }
+}
+
+/* ── Ticket Closed ── */
+.fd-ticket-closed {
+  background: rgba(74, 222, 128, 0.06);
+  border: 1.5px solid rgba(74, 222, 128, 0.4);
+  border-radius: 8px;
+  padding: 8px 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+  min-width: 112px;
+  flex-shrink: 0;
+}
+
+.fd-ticket-icon { font-size: 1.4rem; }
+
+.fd-ticket-status {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+}
+
+.fd-ticket-badge {
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: #4ade80;
+  background: rgba(74, 222, 128, 0.12);
+  border: 1px solid rgba(74, 222, 128, 0.3);
+  border-radius: 4px;
+  padding: 2px 8px;
+}
+
+.fd-ticket-title {
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: #cbd5e1;
+}
+
+.fd-ticket-subtitle {
+  font-size: 0.62rem;
+  color: #64748b;
+}
+
+.fd-ticket-loop-label {
+  font-size: 0.58rem;
+  color: #4ade80;
+  opacity: 0.7;
+  letter-spacing: 0.04em;
+  font-style: italic;
+}
