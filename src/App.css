@@ -26,6 +26,83 @@
   font-size: 0.85rem;
 }
 
+/* ── LLM Provider Bar ── */
+.llm-provider-bar {
+  width: 100%;
+  background: rgba(13, 15, 26, 0.92);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 6px 2rem;
+}
+
+.llm-provider-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 4px 12px 4px 10px;
+  border-radius: 20px;
+  border: 1.5px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.03);
+  color: #94a3b8;
+  font-size: 0.8rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: border-color 0.15s, color 0.15s, background 0.15s;
+  white-space: nowrap;
+}
+
+.llm-provider-btn:hover:not(:disabled) {
+  border-color: rgba(255, 255, 255, 0.25);
+  color: #e2e8f0;
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.llm-provider-btn--active {
+  border-color: #a78bfa;
+  background: rgba(167, 139, 250, 0.1);
+  color: #e2e8f0;
+}
+
+
+.llm-provider-icon {
+  font-size: 0.75rem;
+  line-height: 1;
+}
+
+.llm-provider-label {
+  font-weight: 600;
+  letter-spacing: 0.01em;
+}
+
+.llm-provider-tag {
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 1px 7px;
+  border-radius: 10px;
+}
+
+.llm-provider-tag--claude {
+  background: rgba(167, 139, 250, 0.2);
+  color: #c4b5fd;
+}
+
+.llm-provider-tag--litellm {
+  background: rgba(96, 165, 250, 0.15);
+  color: #93c5fd;
+}
+
+.llm-provider-model {
+  margin-left: auto;
+  font-size: 0.72rem;
+  color: #475569;
+  font-family: monospace;
+  letter-spacing: 0.02em;
+}
+
 /* ── Header ── */
 .app-header {
   position: sticky;

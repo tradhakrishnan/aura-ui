@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import './App.css'
 
 /* ── Marriott-style M mark ──────────────────────────────────────────────── */
@@ -18,6 +18,7 @@ function MarriottM({ className }: { className?: string }) {
     </svg>
   )
 }
+import { getLlmConfig, setLlmProvider, type LlmConfig } from './api/agentApi'
 import FrameworkDiagram from './components/FrameworkDiagram'
 import TapEcosystem from './components/TapEcosystem'
 import TechArchitecture from './components/TechArchitecture'
@@ -50,6 +51,60 @@ const TEAM = [
   { name: 'Bhagvan (MTA)', role: 'Backend Spring Boot Services',                               tag: 'Spring Boot · Java 21',             icon: '☕' },
   { name: 'Hemant (MTA)',  role: 'FastAPI Python Services',                                    tag: 'FastAPI · Python 3.11',             icon: '🐍' },
 ]
+
+const PROVIDER_ICONS: Record<string, string> = {
+  claude:  '✦',
+  litellm: '⚡',
+}
+
+function LlmProviderBar() {
+  const [config, setConfig] = useState<LlmConfig | null>(null)
+  const [switching, setSwitching] = useState(false)
+
+  useEffect(() => {
+    getLlmConfig().then(setConfig)
+  }, [])
+
+  const select = async (id: string) => {
+    if (!config || switching || config.active === id) return
+    setSwitching(true)
+    try {
+      await setLlmProvider(id)
+      setConfig(prev => prev ? { ...prev, active: id } : prev)
+    } finally {
+      setSwitching(false)
+    }
+  }
+
+  if (!config) return null
+
+  return (
+    <div className="llm-provider-bar">
+      {config.providers.map(p => {
+        const isActive = config.active === p.id
+        return (
+          <button
+            key={p.id}
+            className={[
+              'llm-provider-btn',
+              isActive ? 'llm-provider-btn--active' : '',
+            ].filter(Boolean).join(' ')}
+            onClick={() => select(p.id)}
+            disabled={switching}
+            title={p.available ? p.description : `${p.description} — not configured`}
+          >
+            <span className="llm-provider-icon">{PROVIDER_ICONS[p.id] ?? '◈'}</span>
+            <span className="llm-provider-label">{p.label}</span>
+            <span className={`llm-provider-tag llm-provider-tag--${p.id}`}>
+              {p.description}
+            </span>
+          </button>
+        )
+      })}
+      <span className="llm-provider-model" title="Active model">{config.model}</span>
+    </div>
+  )
+}
 
 function DisclaimerBanner() {
   return (
@@ -298,6 +353,7 @@ function App() {
   return (
     <div className="app">
       <DisclaimerBanner />
+      <LlmProviderBar />
       <AppHeader page={page} onNav={(p) => p === 'run' ? openRun() : setPage(p)} />
       <main className="main-content">
         {page === 'home'         && <HomePage onRunAgent={() => openRun()} />}

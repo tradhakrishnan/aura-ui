@@ -149,6 +149,34 @@ export async function getJiraIssues(): Promise<JiraIssuesResponse> {
   return res.json()
 }
 
+export interface LlmProvider {
+  id: string
+  label: string
+  description: string
+  available: boolean
+}
+
+export interface LlmConfig {
+  active: string
+  providers: LlmProvider[]
+  model: string
+}
+
+export async function getLlmConfig(): Promise<LlmConfig | null> {
+  const res = await fetch(`${BASE}/config/llm`)
+  if (!res.ok) return null
+  return res.json()
+}
+
+export async function setLlmProvider(provider: string): Promise<void> {
+  const res = await fetch(`${BASE}/config/llm`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ provider }),
+  })
+  if (!res.ok) throw new Error(`Switch failed: ${res.statusText}`)
+}
+
 export async function getRunPrompts(runId: string): Promise<RunPrompts> {
   const res = await fetch(`${BASE}/run/${runId}/prompts`)
   if (!res.ok) throw new Error(`Fetch prompts failed: ${res.statusText}`)
