@@ -1,0 +1,268 @@
+/* ── Container ────────────────────────────────────────────── */
+.uc-container {
+  background: rgba(255,255,255,0.02);
+  border: 1px solid rgba(255,255,255,0.07);
+  border-radius: 12px;
+  padding: 1.5rem 1.25rem 1.25rem;
+}
+
+/* ── Header ───────────────────────────────────────────────── */
+.uc-header       { text-align: center; margin-bottom: 2rem; }
+
+.uc-eyebrow {
+  display: inline-block;
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  color: #a78bfa;
+  background: rgba(167,139,250,0.1);
+  border: 1px solid rgba(167,139,250,0.25);
+  padding: 2px 10px;
+  border-radius: 99px;
+  margin-bottom: 0.4rem;
+}
+
+.uc-title {
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: #f1f5f9;
+  letter-spacing: -0.02em;
+  margin: 0 0 0.35rem;
+}
+
+.uc-desc {
+  max-width: 540px;
+  margin: 0 auto;
+  color: #64748b;
+  font-size: 0.8rem;
+  line-height: 1.55;
+}
+
+/* ── Tree ─────────────────────────────────────────────────── */
+.uc-tree {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 1.25rem;
+}
+
+/* AURA root box */
+.uc-root-wrap  { display: flex; justify-content: center; }
+.uc-root-node  {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: rgba(167,139,250,0.08);
+  border: 1.5px solid rgba(167,139,250,0.35);
+  border-radius: 10px;
+  padding: 0.55rem 1.2rem;
+  box-shadow: 0 0 24px rgba(167,139,250,0.1);
+}
+.uc-root-icon  { font-size: 1rem; color: #a78bfa; }
+.uc-root-title {
+  font-size: 1rem;
+  font-weight: 800;
+  color: #e2d9f3;
+  letter-spacing: 0.04em;
+}
+.uc-root-sub   { font-size: 0.65rem; color: #64748b; }
+
+/* Vertical trunk */
+.uc-trunk {
+  width: 2px;
+  height: 28px;
+  background: linear-gradient(to bottom, rgba(167,139,250,0.4), rgba(167,139,250,0.15));
+  flex-shrink: 0;
+}
+
+/* Tab row — the 6 use-case boxes */
+.uc-tab-row {
+  display: flex;
+  width: 100%;
+  gap: 0.5rem;
+  position: relative;
+}
+
+/* Horizontal bar connecting all branches */
+.uc-tab-row::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  /* span from centre of first tab to centre of last tab */
+  left: calc(100% / 12);
+  right: calc(100% / 12);
+  height: 2px;
+  background: rgba(167,139,250,0.15);
+  pointer-events: none;
+}
+
+/* Each tab */
+.uc-tab {
+  flex: 1;
+  position: relative;
+  padding-top: 20px;         /* space above for vertical branch line */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  background: rgba(255,255,255,0.02);
+  border: 1px solid rgba(255,255,255,0.07);
+  border-radius: 10px;
+  padding-bottom: 0.7rem;
+  cursor: pointer;
+  transition: background 0.18s, border-color 0.18s, box-shadow 0.18s;
+  text-align: center;
+}
+.uc-tab:hover:not(.uc-tab--active) {
+  background: rgba(255,255,255,0.04);
+  border-color: rgba(255,255,255,0.13);
+}
+
+/* Vertical branch line from horizontal bar to each tab */
+.uc-tab::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 2px;
+  height: 20px;
+  background: rgba(167,139,250,0.15);
+  pointer-events: none;
+}
+
+.uc-tab-icon  { font-size: 1.1rem; line-height: 1; }
+.uc-tab-num   { font-size: 1.1rem; font-weight: 800; line-height: 1; }
+.uc-tab-name  { font-size: 0.7rem; font-weight: 600; line-height: 1.2; }
+.uc-tab-sub2  { font-size: 0.6rem; color: #475569; line-height: 1; }
+
+/* ── Detail panel ─────────────────────────────────────────── */
+@keyframes uc-detail-in {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0);   }
+}
+
+.uc-detail {
+  background: rgba(255,255,255,0.025);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 12px;
+  padding: 1.25rem;
+  animation: uc-detail-in 0.22s ease;
+}
+
+/* Detail header */
+.uc-detail-head {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.85rem;
+  margin-bottom: 1rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+  flex-wrap: wrap;
+}
+
+.uc-detail-icon {
+  width: 46px;
+  height: 46px;
+  border-radius: 10px;
+  border: 1px solid;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  flex-shrink: 0;
+}
+
+.uc-detail-meta   { flex: 1; min-width: 180px; }
+.uc-detail-title  { font-size: 1.05rem; font-weight: 800; margin: 0 0 3px; }
+.uc-detail-tag    { font-size: 0.68rem; color: #64748b; }
+
+.uc-detail-metrics-row {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  align-items: flex-start;
+}
+
+.uc-detail-metric {
+  background: rgba(255,255,255,0.03);
+  border: 1px solid;
+  border-radius: 8px;
+  padding: 0.35rem 0.6rem;
+  text-align: center;
+  min-width: 64px;
+}
+.uc-detail-metric-val { display: block; font-size: 0.9rem; font-weight: 800; line-height: 1.2; }
+.uc-detail-metric-lbl { display: block; font-size: 0.57rem; color: #475569; margin-top: 2px; }
+
+/* Detail body — two columns */
+.uc-detail-body {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.25rem;
+}
+
+.uc-detail-scenario {
+  font-size: 0.78rem;
+  color: #94a3b8;
+  line-height: 1.7;
+  margin: 0 0 0.5rem;
+}
+
+/* Divider */
+.uc-divider {
+  font-size: 0.6rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: #334155;
+  margin: 0.5rem 0 0.4rem;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+.uc-divider::before,
+.uc-divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: rgba(255,255,255,0.05);
+}
+
+/* Agent chips */
+.uc-agents      { display: flex; flex-wrap: wrap; align-items: center; gap: 3px; }
+.uc-agent-chip  { font-size: 0.62rem; font-weight: 600; padding: 2px 7px; border-radius: 4px; border: 1px solid; white-space: nowrap; }
+.uc-agent-arrow { color: #334155; font-size: 0.75rem; }
+
+/* Steps grid */
+.uc-steps-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0 0.75rem; }
+.uc-steps-col  { display: flex; flex-direction: column; gap: 4px; }
+.uc-step       { display: flex; gap: 6px; align-items: flex-start; font-size: 0.7rem; color: #94a3b8; line-height: 1.45; }
+.uc-step-num   {
+  font-size: 0.6rem;
+  font-weight: 700;
+  min-width: 16px;
+  height: 16px;
+  border-radius: 3px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+/* Systems */
+.uc-systems  { display: flex; flex-wrap: wrap; gap: 4px; }
+.uc-sys-chip { font-size: 0.62rem; padding: 2px 8px; border-radius: 4px; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.09); color: #64748b; }
+
+/* ── Responsive ───────────────────────────────────────────── */
+@media (max-width: 860px) {
+  .uc-detail-body { grid-template-columns: 1fr; }
+  .uc-tab-name    { display: none; }
+}
+
+@media (max-width: 600px) {
+  .uc-tab-row     { gap: 0.25rem; }
+  .uc-tab-sub2    { display: none; }
+  .uc-steps-grid  { grid-template-columns: 1fr; }
+}
