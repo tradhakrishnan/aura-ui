@@ -10,22 +10,22 @@ interface Client {
 
 const clients: Client[] = [
   {
-    name: 'MARSHA',
-    description: 'Marriott Reservation & Hotel System',
+    name: 'CRS-1',
+    description: 'Central Reservation System - App-1',
     icon: '🌐',
     direction: 'feed',
     side: 'left',
   },
   {
-    name: 'ACRS',
-    description: 'Amadeus Central Reservation System',
+    name: 'CRS-2',
+    description: 'Central Reservation System - App-2',
     icon: '✈️',
     direction: 'feed',
     side: 'left',
   },
   {
-    name: 'VDS / SailPoint',
-    description: 'Virtual Directory & Identity Services',
+    name: 'IAM',
+    description: 'Identity & Access Management - App-3',
     icon: '🔐',
     direction: 'feed',
     side: 'left',

@@ -185,6 +185,11 @@
   width: 100%;
 }
 
+.main-content--wide {
+  max-width: 100%;
+  padding: 0 1rem 4rem;
+}
+
 /* ── Hero ── */
 .hero-section {
   text-align: center;

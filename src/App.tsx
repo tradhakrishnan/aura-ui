@@ -43,7 +43,7 @@ const NAV_ITEMS: NavItem[] = [
   { page: 'jira',         label: 'Jira Issues',   cls: 'nav-jira-btn'       },
   { page: 'status',       label: 'Ticket Status', cls: 'nav-status-btn'     },
   { page: 'run',          label: '▶ Run Agent',   cls: 'nav-run-btn'        },
-  // { page: 'team',         label: 'Team'             },  // hidden — re-enable when ready
+  { page: 'team',         label: 'Team'             },
   { page: 'disclaimer',   label: 'Disclaimer',    cls: 'nav-disclaimer-btn' },
 ]
 
@@ -345,7 +345,7 @@ function App() {
       <DisclaimerBanner />
       <LlmProviderBar />
       <AppHeader page={page} onNav={(p) => p === 'run' ? openRun() : setPage(p)} />
-      <main className="main-content">
+      <main className={`main-content${(page === 'framework' || page === 'architecture') ? ' main-content--wide' : ''}`}>
         {page === 'home'         && <HomePage onRunAgent={() => openRun()} />}
         {page === 'ecosystem'    && <EcosystemPage />}
         {page === 'framework'    && <FrameworkPage />}

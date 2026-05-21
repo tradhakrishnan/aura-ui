@@ -25,14 +25,14 @@ function formatTokens(n: number): string {
 }
 
 const SECTIONS = [
-  { key: 'sda_open',   label: 'Service Desk Analyst',    tag: 'SDA',  icon: 'SDA',  iconMod: 'sda'  },
-  { key: 'spa',        label: 'System & Process Analyst', tag: 'SPA',  icon: 'SPA',  iconMod: 'spa'  },
-  { key: 'sme',        label: 'Subject Matter Expert',    tag: 'SME',  icon: 'SME',  iconMod: 'sme'  },
-  { key: 'rat',        label: 'Risk Assessment Team',     tag: 'RAT',  icon: 'RAT',  iconMod: 'rat'  },
-  { key: 'authorizer', label: 'Authorizer',               tag: 'AUTH', icon: 'AUTH', iconMod: 'auth' },
-  { key: 'ea',         label: 'Execution Agent',          tag: 'EA',   icon: 'EA',   iconMod: 'ea'   },
-  { key: 'va',         label: 'Validation Agent',         tag: 'VA',   icon: 'VA',   iconMod: 'va'   },
-  { key: 'sda_close',  label: 'Service Desk Analyst (Close)', tag: 'SDA', icon: 'SDA', iconMod: 'sda' },
+  { key: 'sda_open',   label: 'Request Intake Agent',     tag: 'SDA',  icon: 'SDA',  iconMod: 'sda'  },
+  { key: 'spa',        label: 'System Diagnostics Agent', tag: 'SPA',  icon: 'SPA',  iconMod: 'spa'  },
+  { key: 'sme',        label: 'Expert Advisor Agent',     tag: 'SME',  icon: 'SME',  iconMod: 'sme'  },
+  { key: 'rat',        label: 'Risk Evaluator Agent',     tag: 'RAT',  icon: 'RAT',  iconMod: 'rat'  },
+  { key: 'authorizer', label: 'Change Approver (Manual)', tag: 'AUTH', icon: 'AUTH', iconMod: 'auth' },
+  { key: 'ea',         label: 'Implementation Agent',     tag: 'EA',   icon: 'EA',   iconMod: 'ea'   },
+  { key: 'va',         label: 'Change Validation Agent',  tag: 'VA',   icon: 'VA',   iconMod: 'va'   },
+  { key: 'sda_close',  label: 'Resolution Agent',         tag: 'SDA',  icon: 'SDA',  iconMod: 'sda'  },
 ]
 
 const SEVERITY_OPTIONS = ['Critical', 'High', 'Medium', 'Low']
@@ -73,12 +73,12 @@ const DEMO_TICKETS: { label: string; form: TicketPayload }[] = [
     form: {
       ticket_id: `INC${Math.floor(100000 + Math.random() * 900000)}`,
       source: 'Manual',
-      title: 'User GPBGY085 missing MARSHA app assignment',
+      title: 'User GPBGY085 missing CRS-1 app assignment',
       description:
-        'User GPBGY085 does not have an active MARSHA application assignment. ' +
+        'User GPBGY085 does not have an active CRS-1 application assignment. ' +
         'They are unable to log into the reservation system and impacting check-in operations at 3 properties.',
       severity: 'Critical',
-      affected_system: 'MARSHA',
+      affected_system: 'CRS-1',
       affected_hotel: '',
       affected_location: '',
       affected_eid: 'GPBGY085',
@@ -92,10 +92,10 @@ const DEMO_TICKETS: { label: string; form: TicketPayload }[] = [
       source: 'Manual',
       title: 'Inactive hotel XZADS blocking TAP location sync',
       description:
-        'Hotel XZADS has status Inactive in TAP but is still referenced in the ACRS assignment feed. ' +
+        'Hotel XZADS has status Inactive in TAP but is still referenced in the CRS-2 assignment feed. ' +
         'This is causing sync errors and preventing nightly reconciliation from completing.',
       severity: 'Medium',
-      affected_system: 'ACRS',
+      affected_system: 'CRS-2',
       affected_hotel: 'XZADS',
       affected_location: '',
       affected_eid: '',
@@ -193,7 +193,7 @@ function AgentResultContent({ section, runData, onOverride, onReject }: { sectio
             ⏳ Awaiting Your Approval
           </div>
         )}
-        {approved && <div className="ar-auth-badge ar-auth-badge--yes">✓ Approved by Human</div>}
+        {approved && <div className="ar-auth-badge ar-auth-badge--yes">✓ Approved by Change Approver</div>}
         {rejected && <div className="ar-auth-badge ar-auth-badge--no">✗ Rejected</div>}
         {messages.map((m, i) => (
           <ReactMarkdown key={i} remarkPlugins={[remarkGfm]}>{m.content}</ReactMarkdown>

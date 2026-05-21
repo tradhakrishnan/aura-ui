@@ -4,8 +4,8 @@ import './TechArchitecture.css'
 
 const VConn = ({ color = '#334155' }: { color?: string }) => (
   <div className="ta-vconn">
-    <svg width="2" height="24" viewBox="0 0 2 24">
-      <line x1="1" y1="0" x2="1" y2="24" stroke={color} strokeWidth="1.5" strokeDasharray="3,2" />
+    <svg width="2" height="12" viewBox="0 0 2 12">
+      <line x1="1" y1="0" x2="1" y2="12" stroke={color} strokeWidth="1.5" strokeDasharray="3,2" />
     </svg>
   </div>
 )
@@ -30,30 +30,38 @@ const InputLayer = () => (
 
       {/* Jira Cloud — external issue source */}
       <div className="ta-card ta-card--jira ta-card--flex">
-        <div className="ta-card-icon">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="#2684ff">
-            <path d="M11.571 11.513H0a5.218 5.218 0 0 0 5.232 5.215h2.13v2.057A5.215 5.215 0 0 0 12.575 24V12.518a1.005 1.005 0 0 0-1.004-1.005zm5.723-5.756H5.757a5.215 5.215 0 0 0 5.232 5.215h2.13v2.057A5.215 5.215 0 0 0 18.298 18.3V6.762a1.005 1.005 0 0 0-1.004-1.005zm5.701-5.757H11.48a5.215 5.215 0 0 0 5.215 5.215h2.13v2.04A5.215 5.215 0 0 0 24 12.47V1.005A1.005 1.005 0 0 0 22.995 0z" />
-          </svg>
+        <div className="ta-card-header-row">
+          <div className="ta-card-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="#2684ff">
+              <path d="M11.571 11.513H0a5.218 5.218 0 0 0 5.232 5.215h2.13v2.057A5.215 5.215 0 0 0 12.575 24V12.518a1.005 1.005 0 0 0-1.004-1.005zm5.723-5.756H5.757a5.215 5.215 0 0 0 5.232 5.215h2.13v2.057A5.215 5.215 0 0 0 18.298 18.3V6.762a1.005 1.005 0 0 0-1.004-1.005zm5.701-5.757H11.48a5.215 5.215 0 0 0 5.215 5.215h2.13v2.04A5.215 5.215 0 0 0 24 12.47V1.005A1.005 1.005 0 0 0 22.995 0z" />
+            </svg>
+          </div>
+          <div className="ta-card-name">Jira Cloud</div>
+          <div className="ta-card-sub">atlassian.net · REST API v3</div>
         </div>
-        <div className="ta-card-name">Jira Cloud</div>
-        <div className="ta-card-sub">atlassian.net · REST API v3</div>
+        <div className="ta-card-note">
+          Human opens <strong>Jira Issues page</strong> → UI calls Agent Service<br />
+          Agent Service fetches issues from Jira via <code>jira_client.py</code>
+        </div>
         <div className="ta-card-chips">
           <span className="ta-chip ta-chip--jira">Issue Source</span>
           <span className="ta-chip">Webhook (ack-only)</span>
           <span className="ta-chip">API Token Auth</span>
           <span className="ta-chip">jira-python 3.10</span>
         </div>
-        <div className="ta-card-note">
-          Human opens <strong>Jira Issues page</strong> → UI calls Agent Service<br />
-          Agent Service fetches issues from Jira via <code>jira_client.py</code>
-        </div>
       </div>
 
       {/* AURA UI — the only client of Agent Service */}
       <div className="ta-card ta-card--amber ta-card--flex">
-        <div className="ta-card-icon">🖥️</div>
-        <div className="ta-card-name">AURA UI</div>
-        <div className="ta-card-sub">React 19 · TypeScript · Vite 8</div>
+        <div className="ta-card-header-row">
+          <div className="ta-card-icon">🖥️</div>
+          <div className="ta-card-name">AURA UI</div>
+          <div className="ta-card-sub">React 19 · TypeScript · Vite 8</div>
+        </div>
+        <div className="ta-card-note">
+          All calls route via Vite proxy: <code>/agent/*</code> → Agent Service <code>:8090</code><br />
+          UI never contacts Jira directly
+        </div>
         <div className="ta-card-chips">
           <span className="ta-chip">Jira Issues Page</span>
           <span className="ta-chip">Manual Ticket Form</span>
@@ -61,10 +69,6 @@ const InputLayer = () => (
           <span className="ta-chip">Ticket Status</span>
           <span className="ta-chip">SSE Streaming</span>
           <span className="ta-chip ta-chip--port">:3000</span>
-        </div>
-        <div className="ta-card-note">
-          All calls route via Vite proxy: <code>/agent/*</code> → Agent Service <code>:8090</code><br />
-          UI never contacts Jira directly
         </div>
       </div>
 
@@ -128,14 +132,14 @@ const AgentLayer = () => (
             <div className="ta-sub-label">LangGraph StateGraph — 8-node pipeline</div>
             <div className="ta-pipeline">
               {[
-                { name: 'SDA',  color: '#f59e0b', label: 'Service Desk\nAnalyst (open)' },
-                { name: 'SPA',  color: '#818cf8', label: 'Software\nProgrammer' },
-                { name: 'SME',  color: '#38bdf8', label: 'Subject Matter\nExpert' },
-                { name: 'RAT',  color: '#f97316', label: 'Risk\nAssessment' },
-                { name: 'AUTH', color: '#c084fc', label: 'Authorizer\n(Human Gate)' },
-                { name: 'EA',   color: '#4ade80', label: 'Execution\nAgent' },
-                { name: 'VA',   color: '#2dd4bf', label: 'Validation\nAgent' },
-                { name: 'SDA★', color: '#f59e0b', label: 'Service Desk\nAnalyst (close)' },
+                { name: 'SDA',  color: '#f59e0b', label: 'Request Intake\nAgent' },
+                { name: 'SPA',  color: '#818cf8', label: 'System Diagnostics\nAgent' },
+                { name: 'SME',  color: '#38bdf8', label: 'Expert Advisor\nAgent' },
+                { name: 'RAT',  color: '#f97316', label: 'Risk Evaluator\nAgent' },
+                { name: 'AUTH', color: '#c084fc', label: 'Change Approver\n(Manual)' },
+                { name: 'EA',   color: '#4ade80', label: 'Implementation\nAgent' },
+                { name: 'VA',   color: '#2dd4bf', label: 'Change Validation\nAgent' },
+                { name: 'SDA★', color: '#f59e0b', label: 'Resolution\nAgent' },
               ].map((a, i, arr) => (
                 <div key={a.name} className="ta-pipeline-step">
                   <div className="ta-agent-node" style={{ borderColor: a.color, background: `${a.color}10` }}>
@@ -152,21 +156,29 @@ const AgentLayer = () => (
               ))}
             </div>
           </div>
-          <div className="ta-agent-sub ta-agent-sub--right">
-            <div className="ta-sub-label">LLM Backbone</div>
-            <div className="ta-llm-card">
-              <div className="ta-llm-icon">✦</div>
-              <div>
-                <div className="ta-llm-name">Claude Sonnet 4.6</div>
-                <div className="ta-llm-by">Anthropic API</div>
+          <div className="ta-agent-sub ta-agent-sub--bottom">
+            <div className="ta-agent-info-item">
+              <div className="ta-sub-label">LLM Backbone</div>
+              <div className="ta-llm-card">
+                <div className="ta-llm-icon">✦</div>
+                <div>
+                  <div className="ta-llm-name">Claude Sonnet 4.6</div>
+                  <div className="ta-llm-by">Anthropic API</div>
+                </div>
               </div>
             </div>
-            <div className="ta-sub-label" style={{ marginTop: 7 }}>Rate Limit Guard</div>
-            <div className="ta-info-pill">Exponential backoff · 15s→30s→60s→120s</div>
-            <div className="ta-sub-label" style={{ marginTop: 7 }}>Human-in-the-Loop</div>
-            <div className="ta-info-pill ta-info-pill--purple">AUTH pause · /approve · /reject</div>
-            <div className="ta-sub-label" style={{ marginTop: 7 }}>Failure Recovery</div>
-            <div className="ta-info-pill ta-info-pill--red">POST /run/{'{id}'}/retry</div>
+            <div className="ta-agent-info-item">
+              <div className="ta-sub-label">Rate Limit Guard</div>
+              <div className="ta-info-pill">Exponential backoff · 15s→30s→60s→120s</div>
+            </div>
+            <div className="ta-agent-info-item">
+              <div className="ta-sub-label">Human-in-the-Loop</div>
+              <div className="ta-info-pill ta-info-pill--purple">AUTH pause · /approve · /reject</div>
+            </div>
+            <div className="ta-agent-info-item">
+              <div className="ta-sub-label">Failure Recovery</div>
+              <div className="ta-info-pill ta-info-pill--red">POST /run/{'{id}'}/retry</div>
+            </div>
           </div>
         </div>
       </div>
@@ -187,7 +199,7 @@ const ServiceLayer = () => (
         <div className="ta-row ta-row--gap">
           <div className="ta-card ta-card--blue ta-card--flex">
             <div className="ta-card-icon">🔍</div>
-            <div className="ta-card-name">TAP Query</div>
+            <div className="ta-card-name">SAP Query</div>
             <div className="ta-card-sub">Read-only access</div>
             <div className="ta-card-chips">
               <span className="ta-chip">Hotels</span>
@@ -198,7 +210,7 @@ const ServiceLayer = () => (
           </div>
           <div className="ta-card ta-card--blue ta-card--flex">
             <div className="ta-card-icon">✏️</div>
-            <div className="ta-card-name">TAP Updater</div>
+            <div className="ta-card-name">SAP Updater</div>
             <div className="ta-card-sub">Write / mutate</div>
             <div className="ta-card-chips">
               <span className="ta-chip">Create</span>
@@ -214,10 +226,10 @@ const ServiceLayer = () => (
         <div className="ta-group-label" style={{ color: '#38bdf8' }}>🐍 FastAPI · Python 3.11</div>
         <div className="ta-row ta-row--gap">
           {[
-            { icon: '🌐', name: 'MARSHA Client', sub: 'Location + User', port: ':8083' },
-            { icon: '📊', name: 'MINT Client',   sub: 'Location only',   port: ':8084' },
-            { icon: '✈️',  name: 'ACRS Client',  sub: 'Assignments',     port: ':8085' },
-            { icon: '🔐', name: 'VDS Client',    sub: 'Identity layer',  port: ':8086' },
+            { icon: '🌐', name: 'CRS-1 Client', sub: 'Location + User', port: ':8083' },
+            { icon: '📊', name: 'MITE Client',   sub: 'Location only',   port: ':8084' },
+            { icon: '✈️',  name: 'CRS-2 Client',  sub: 'Assignments',     port: ':8085' },
+            { icon: '🔐', name: 'IAM Client',    sub: 'Identity layer',  port: ':8086' },
           ].map(s => (
             <div key={s.name} className="ta-card ta-card--teal ta-card--flex">
               <div className="ta-card-icon">{s.icon}</div>
@@ -322,12 +334,12 @@ const StackSummary = () => {
 const PortMap = () => {
   const ports = [
     { port: ':3000',  name: 'AURA UI',           color: '#818cf8' },
-    { port: ':8081',  name: 'TAP Query',          color: '#60a5fa' },
-    { port: ':8082',  name: 'TAP Updater',        color: '#60a5fa' },
-    { port: ':8083',  name: 'MARSHA Client',      color: '#2dd4bf' },
-    { port: ':8084',  name: 'MINT Client',        color: '#2dd4bf' },
-    { port: ':8085',  name: 'ACRS Client',        color: '#2dd4bf' },
-    { port: ':8086',  name: 'VDS Client',         color: '#2dd4bf' },
+    { port: ':8081',  name: 'SAP Query',          color: '#60a5fa' },
+    { port: ':8082',  name: 'SAP Updater',        color: '#60a5fa' },
+    { port: ':8083',  name: 'CRS-1 Client',      color: '#2dd4bf' },
+    { port: ':8084',  name: 'MITE Client',        color: '#2dd4bf' },
+    { port: ':8085',  name: 'CRS-2 Client',        color: '#2dd4bf' },
+    { port: ':8086',  name: 'IAM Client',         color: '#2dd4bf' },
     { port: ':8090',  name: 'Agent Service',      color: '#a78bfa' },
     { port: ':27017', name: 'MongoDB',            color: '#4ade80' },
     { port: 'cloud',  name: 'Jira · atlassian.net', color: '#2684ff' },
@@ -355,13 +367,9 @@ export default function TechArchitecture() {
   return (
     <div className="ta-container">
       <div className="ta-section-header">
-        <div className="ta-section-eyebrow">Marriott Codefest 4.0</div>
         <h2 className="ta-section-title">Technical Architecture</h2>
         <p className="ta-section-desc">
-          End-to-end architecture: a React UI, Jira Cloud integration, LangGraph 8-agent pipeline,
-          two Spring Boot data services, four Python client adapters, MongoDB persistence, and the
-          Anthropic API — all wired together for autonomous incident resolution with full Jira
-          lifecycle write-back.
+          React UI · LangGraph 8-agent pipeline · Spring Boot services · Python adapters · MongoDB · Anthropic API — wired end-to-end for autonomous incident resolution with full Jira lifecycle write-back.
         </p>
       </div>
 
@@ -372,9 +380,10 @@ export default function TechArchitecture() {
         <VConn color="#334155" />
         <AgentLayer />
         <VConn color="#334155" />
-        <ServiceLayer />
-        <VConn color="#334155" />
-        <DataLayer />
+        <div className="ta-row-pair">
+          <ServiceLayer />
+          <DataLayer />
+        </div>
       </div>
 
       <div className="ta-footer-row">

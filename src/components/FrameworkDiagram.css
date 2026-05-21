@@ -40,7 +40,7 @@
   border: 1px solid rgba(255, 255, 255, 0.07);
   border-radius: 16px;
   padding: 1.25rem 1rem;
-  overflow-x: auto;
+  overflow: hidden;
 }
 
 /* ── Diagram row ── */
@@ -48,7 +48,7 @@
   display: flex;
   align-items: center;
   gap: 0;
-  width: 100%;
+  width: max-content;
 }
 
 /* ── Shared column ── */
@@ -63,7 +63,7 @@
   display: flex;
   flex-direction: column;
   gap: 7px;
-  width: 168px;
+  width: 205px;
 }
 
 .fd-source-box {
@@ -87,7 +87,7 @@
 }
 
 .fd-source-title {
-  font-size: 0.7rem;
+  font-size: 0.92rem;
   font-weight: 600;
   color: #e2e8f0;
   margin-bottom: 3px;
@@ -100,7 +100,7 @@
 }
 
 .fd-chip {
-  font-size: 0.58rem;
+  font-size: 0.84rem;
   color: #94a3b8;
   background: rgba(255, 255, 255, 0.05);
   border: 1px solid rgba(255, 255, 255, 0.08);
@@ -143,8 +143,9 @@
 }
 
 .fd-arrow-label-text {
-  font-size: 0.55rem;
-  color: #64748b;
+  font-size: 0.65rem;
+  font-weight: 600;
+  color: #a5b4fc;
   text-align: center;
   margin-bottom: 3px;
   line-height: 1.2;
@@ -173,8 +174,52 @@
 /* ─────────────────────────────────────────
    TECH SUPPORT TEAM
 ───────────────────────────────────────── */
+.fd-intake {
+  width: 180px;
+}
+
+.fd-intake-wrapper {
+  border: 1.5px solid rgba(99, 102, 241, 0.45);
+  border-radius: 10px;
+  padding: 10px 9px;
+  background: rgba(99, 102, 241, 0.06);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+
+.fd-intake-icon {
+  font-size: 1.3rem;
+}
+
+.fd-intake-title {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: #a5b4fc;
+  text-align: center;
+  line-height: 1.2;
+}
+
+.fd-intake-chips {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  width: 100%;
+}
+
+.fd-intake-chip {
+  font-size: 0.88rem;
+  background: rgba(99, 102, 241, 0.12);
+  border: 1px solid rgba(99, 102, 241, 0.25);
+  border-radius: 4px;
+  padding: 2px 5px;
+  color: #a5b4fc;
+  text-align: center;
+}
+
 .fd-support-team {
-  width: 158px;
+  width: 235px;
 }
 
 .fd-team-wrapper {
@@ -198,6 +243,11 @@
   gap: 4px;
 }
 
+.fd-amber {
+  background: rgba(245, 158, 11, 0.08);
+  border: 1.5px solid rgba(245, 158, 11, 0.45);
+}
+
 .fd-green {
   background: rgba(34, 197, 94, 0.08);
   border: 1.5px solid rgba(34, 197, 94, 0.4);
@@ -208,22 +258,30 @@
   border: 1.5px solid rgba(239, 68, 68, 0.35);
 }
 
+.fd-outcome-row {
+  display: flex;
+  flex-direction: row;
+  gap: 6px;
+  width: 100%;
+}
+
 .fd-researcher-icon {
   font-size: 1.1rem;
 }
 
 .fd-researcher-label {
-  font-size: 0.72rem;
+  font-size: 1rem;
   font-weight: 700;
   text-align: center;
   line-height: 1.2;
 }
 
+.fd-researcher-label.amber { color: #f59e0b; }
 .fd-researcher-label.green { color: #4ade80; }
 .fd-researcher-label.red   { color: #f87171; }
 
 .fd-discussion-pill {
-  font-size: 0.62rem;
+  font-size: 0.88rem;
   color: #94a3b8;
   background: rgba(255, 255, 255, 0.05);
   border: 1px solid rgba(255, 255, 255, 0.12);
@@ -243,11 +301,20 @@
   letter-spacing: 0.04em;
 }
 
+.fd-team-label-inside {
+  margin-top: 6px;
+  text-align: center;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #f59e0b;
+  letter-spacing: 0.04em;
+}
+
 /* ─────────────────────────────────────────
    TECH LEAD
 ───────────────────────────────────────── */
 .fd-tech-lead {
-  width: 128px;
+  width: 165px;
 }
 
 .fd-lead-wrapper {
@@ -273,19 +340,21 @@
 }
 
 .fd-lead-title {
-  font-size: 0.8rem;
+  font-size: 1.15rem;
   font-weight: 700;
   color: #c4b5fd;
+  text-align: center;
 }
 
 .fd-lead-subtitle {
-  font-size: 0.65rem;
+  font-size: 0.92rem;
   color: #a78bfa;
+  text-align: center;
 }
 
 .fd-ai-badge {
   margin-top: 3px;
-  font-size: 0.56rem;
+  font-size: 0.82rem;
   color: #94a3b8;
   background: rgba(255, 255, 255, 0.04);
   border: 1px solid rgba(255, 255, 255, 0.1);
@@ -301,23 +370,23 @@
    RISK MANAGEMENT
 ───────────────────────────────────────── */
 .fd-risk {
-  width: 150px;
+  width: 190px;
 }
 
 .fd-risk-header {
-  background: #1d4ed8;
+  background: #7c3aed;
   border-radius: 8px 8px 0 0;
   padding: 6px 10px;
   text-align: center;
-  font-size: 0.62rem;
+  font-size: 1.05rem;
   font-weight: 700;
   color: #fff;
   letter-spacing: 0.04em;
 }
 
 .fd-risk-body {
-  background: rgba(29, 78, 216, 0.08);
-  border: 1px solid rgba(29, 78, 216, 0.3);
+  background: rgba(124, 58, 237, 0.08);
+  border: 1px solid rgba(124, 58, 237, 0.3);
   border-top: none;
   border-radius: 0 0 8px 8px;
   padding: 7px 8px;
@@ -344,7 +413,7 @@
 }
 
 .fd-risk-name {
-  font-size: 0.7rem;
+  font-size: 0.95rem;
   font-weight: 600;
 }
 
@@ -352,7 +421,7 @@
    PRODUCT OWNER + EXECUTION
 ───────────────────────────────────────── */
 .fd-po-exec {
-  width: 128px;
+  width: 165px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -360,7 +429,7 @@
 }
 
 .fd-po-box {
-  width: 128px;
+  width: 148px;
   background: rgba(96, 165, 250, 0.06);
   border: 1.5px solid rgba(96, 165, 250, 0.35);
   border-radius: 10px;
@@ -372,13 +441,14 @@
 }
 
 .fd-po-title {
-  font-size: 0.72rem;
+  font-size: 1.15rem;
   font-weight: 700;
   color: #93c5fd;
+  text-align: center;
 }
 
 .fd-exec-box {
-  width: 110px;
+  width: 145px;
   background: linear-gradient(135deg, #1d4ed8, #1e40af);
   border-radius: 10px;
   padding: 11px 8px;
@@ -395,16 +465,25 @@
 }
 
 .fd-exec-title {
-  font-size: 0.85rem;
+  font-size: 1rem;
   font-weight: 800;
   color: #fff;
   letter-spacing: 0.04em;
 }
 
 .fd-exec-subtitle {
-  font-size: 0.55rem;
+  font-size: 0.9rem;
   color: rgba(255, 255, 255, 0.55);
   text-align: center;
+}
+
+.fd-exec-agent-label {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #4ade80;
+  text-align: center;
+  margin-top: 2px;
+  letter-spacing: 0.02em;
 }
 
 /* ─────────────────────────────────────────
@@ -455,11 +534,11 @@
 }
 
 .fd-varrow-label {
-  font-size: 0.58rem;
-  font-weight: 500;
-  letter-spacing: 0.04em;
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
   text-transform: uppercase;
-  color: #64748b;
+  color: #a5b4fc;
 }
 
 /* ── Right section ── */
@@ -500,7 +579,7 @@
   border: 1.5px solid rgba(45, 212, 191, 0.4);
   border-radius: 8px;
   padding: 8px 10px;
-  min-width: 148px;
+  min-width: 190px;
   flex-shrink: 0;
 }
 
@@ -514,7 +593,7 @@
 .fd-validation-icon { font-size: 0.85rem; }
 
 .fd-validation-title {
-  font-size: 0.7rem;
+  font-size: 1.1rem;
   font-weight: 700;
   color: #2dd4bf;
 }
@@ -530,7 +609,7 @@
   display: flex;
   align-items: center;
   gap: 4px;
-  font-size: 0.6rem;
+  font-size: 0.88rem;
   color: #94a3b8;
 }
 
@@ -545,7 +624,7 @@
   display: flex;
   align-items: center;
   gap: 5px;
-  font-size: 0.58rem;
+  font-size: 0.9rem;
   font-weight: 600;
   color: #2dd4bf;
   background: rgba(45, 212, 191, 0.08);
@@ -577,7 +656,7 @@
   flex-direction: column;
   align-items: center;
   gap: 5px;
-  min-width: 112px;
+  min-width: 150px;
   flex-shrink: 0;
 }
 
@@ -591,7 +670,7 @@
 }
 
 .fd-ticket-badge {
-  font-size: 0.7rem;
+  font-size: 0.96rem;
   font-weight: 700;
   color: #4ade80;
   background: rgba(74, 222, 128, 0.12);
@@ -601,18 +680,26 @@
 }
 
 .fd-ticket-title {
-  font-size: 0.72rem;
+  font-size: 0.96rem;
   font-weight: 600;
   color: #cbd5e1;
 }
 
 .fd-ticket-subtitle {
-  font-size: 0.62rem;
+  font-size: 0.9rem;
   color: #64748b;
 }
 
+.fd-ticket-agent-label {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #4ade80;
+  text-align: center;
+  letter-spacing: 0.02em;
+}
+
 .fd-ticket-loop-label {
-  font-size: 0.58rem;
+  font-size: 0.84rem;
   color: #4ade80;
   opacity: 0.7;
   letter-spacing: 0.04em;
