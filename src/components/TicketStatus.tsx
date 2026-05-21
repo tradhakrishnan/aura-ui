@@ -51,16 +51,28 @@ interface Props {
   onBack: () => void
 }
 
+type FilterKey = 'total' | 'running' | 'completed' | 'pending' | 'failed'
+
 export default function TicketStatus({ onViewRun, onBack }: Props) {
   const [runs, setRuns]       = useState<RunSummary[]>([])
   const [loading, setLoading] = useState(true)
   const [lastRefresh, setLastRefresh] = useState<Date>(new Date())
+  const [filter, setFilter]   = useState<FilterKey>('total')
 
   const refresh = useCallback(async () => {
     setLoading(true)
     try {
       const data = await listRuns()
-      setRuns(data)
+      // Keep only the latest run per ticket — hide superseded failed/older attempts
+      const latestPerTicket = new Map<string, typeof data[0]>()
+      for (const run of data) {
+        const key = run.jira_issue_key || run.ticket_id
+        const existing = latestPerTicket.get(key)
+        if (!existing || run.started_at > existing.started_at) {
+          latestPerTicket.set(key, run)
+        }
+      }
+      setRuns([...latestPerTicket.values()])
       setLastRefresh(new Date())
     } catch {/* ignore */}
     finally { setLoading(false) }
@@ -84,52 +96,55 @@ export default function TicketStatus({ onViewRun, onBack }: Props) {
     pending:   runs.filter((r) => r.pending_approval).length,
   }
 
+  const filteredRuns = filter === 'total'     ? runs
+    : filter === 'running'   ? runs.filter((r) => r.status === 'running' && !r.pending_approval)
+    : filter === 'completed' ? runs.filter((r) => r.status === 'completed' && !r.rejected)
+    : filter === 'pending'   ? runs.filter((r) => r.pending_approval)
+    : /* failed */              runs.filter((r) => r.status === 'failed' || r.rejected)
+
+  const handleFilter = (key: FilterKey) =>
+    setFilter(prev => prev === key ? 'total' : key)
+
   return (
     <div className="ts-page">
-      {/* Header */}
-      <div className="ts-header">
-        <div className="ts-header-left">
-          <span className="ts-logo">AURA</span>
+      <div className="ts-body">
+        {/* Page title row */}
+        <div className="ts-page-title-row">
           <div>
-            <div className="ts-header-title">Ticket Status</div>
-            <div className="ts-header-subtitle">Marriott Codefest 4.0</div>
+            <div className="ts-page-title">Ticket Status</div>
+            <div className="ts-page-subtitle">All agent runs — latest run per ticket</div>
           </div>
-        </div>
-        <div className="ts-header-right">
           <button className="ts-btn" onClick={refresh} disabled={loading}>
             {loading ? '↻ Refreshing…' : '↻ Refresh'}
           </button>
-          <button className="ts-btn" onClick={onBack}>← Back to Home</button>
         </div>
-      </div>
-
-      <div className="ts-body">
         {/* Summary bar */}
         <div className="ts-summary-bar">
-          <div className="ts-summary-item">
-            <span className="ts-summary-value">{counts.total}</span>
-            <span className="ts-summary-label">Total</span>
-          </div>
-          <div className="ts-summary-divider" />
-          <div className="ts-summary-item">
-            <span className="ts-summary-value ts-summary-value--running">{counts.running}</span>
-            <span className="ts-summary-label">Running</span>
-          </div>
-          <div className="ts-summary-divider" />
-          <div className="ts-summary-item">
-            <span className="ts-summary-value ts-summary-value--completed">{counts.completed}</span>
-            <span className="ts-summary-label">Completed</span>
-          </div>
-          <div className="ts-summary-divider" />
-          <div className="ts-summary-item">
-            <span className="ts-summary-value ts-summary-value--pending">{counts.pending}</span>
-            <span className="ts-summary-label">Awaiting Approval</span>
-          </div>
-          <div className="ts-summary-divider" />
-          <div className="ts-summary-item">
-            <span className="ts-summary-value ts-summary-value--failed">{counts.failed}</span>
-            <span className="ts-summary-label">Failed</span>
-          </div>
+          {([
+            { key: 'total',     label: 'Total',            value: counts.total,     mod: ''          },
+            { key: 'running',   label: 'Running',          value: counts.running,   mod: 'running'   },
+            { key: 'completed', label: 'Completed',        value: counts.completed, mod: 'completed' },
+            { key: 'pending',   label: 'Awaiting Approval',value: counts.pending,   mod: 'pending'   },
+            { key: 'failed',    label: 'Failed',           value: counts.failed,    mod: 'failed'    },
+          ] as { key: FilterKey; label: string; value: number; mod: string }[]).map((item, i, arr) => (
+            <>
+              <button
+                key={item.key}
+                className={[
+                  'ts-summary-item',
+                  'ts-summary-item--btn',
+                  filter === item.key ? `ts-summary-item--active ts-summary-item--active-${item.mod || 'total'}` : '',
+                ].filter(Boolean).join(' ')}
+                onClick={() => handleFilter(item.key)}
+              >
+                <span className={`ts-summary-value${item.mod ? ` ts-summary-value--${item.mod}` : ''}`}>
+                  {item.value}
+                </span>
+                <span className="ts-summary-label">{item.label}</span>
+              </button>
+              {i < arr.length - 1 && <div key={`div-${item.key}`} className="ts-summary-divider" />}
+            </>
+          ))}
           <div className="ts-summary-refresh">
             Last refreshed {lastRefresh.toLocaleTimeString()}
           </div>
@@ -140,7 +155,14 @@ export default function TicketStatus({ onViewRun, onBack }: Props) {
           <div className="ts-empty">No tickets submitted yet. <button className="ts-link" onClick={onBack}>Submit one now →</button></div>
         )}
 
-        {runs.length > 0 && (
+        {runs.length > 0 && filteredRuns.length === 0 && (
+          <div className="ts-empty">
+            No <strong>{filter}</strong> tickets.{' '}
+            <button className="ts-link" onClick={() => setFilter('total')}>Show all →</button>
+          </div>
+        )}
+
+        {filteredRuns.length > 0 && (
           <div className="ts-table-wrap">
             <table className="ts-table">
               <thead>
@@ -157,7 +179,7 @@ export default function TicketStatus({ onViewRun, onBack }: Props) {
                 </tr>
               </thead>
               <tbody>
-                {runs.map((r) => {
+                {filteredRuns.map((r) => {
                   const mod = statusMod(r)
                   const dur = duration(r)
                   return (

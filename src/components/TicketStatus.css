@@ -1,9 +1,25 @@
 /* ── Layout ─────────────────────────────────────────────────────────────── */
 .ts-page {
-  min-height: 100vh;
-  background: #0d1117;
   color: #e6edf3;
   font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
+}
+
+/* Inline page title row (replaces standalone header) */
+.ts-page-title-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+}
+.ts-page-title {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #e6edf3;
+}
+.ts-page-subtitle {
+  font-size: 0.72rem;
+  color: #8b949e;
+  margin-top: 2px;
 }
 
 /* ── Header ─────────────────────────────────────────────────────────────── */
@@ -115,6 +131,32 @@
   letter-spacing: 0.04em;
   white-space: nowrap;
 }
+
+/* Clickable summary items */
+.ts-summary-item--btn {
+  background: none;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  padding: 0.45rem 0.75rem;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  transition: background 0.15s, border-color 0.15s;
+}
+.ts-summary-item--btn:hover {
+  background: rgba(255,255,255,0.04);
+  border-color: rgba(255,255,255,0.1);
+}
+
+/* Active states — each colour-coded to match the value colour */
+.ts-summary-item--active         { border-color: rgba(230,237,243,0.25) !important; background: rgba(230,237,243,0.06) !important; }
+.ts-summary-item--active-total   { border-color: rgba(230,237,243,0.25) !important; background: rgba(230,237,243,0.06) !important; }
+.ts-summary-item--active-running { border-color: rgba(245,158,11,0.4)   !important; background: rgba(245,158,11,0.08)  !important; }
+.ts-summary-item--active-completed { border-color: rgba(74,222,128,0.4) !important; background: rgba(74,222,128,0.08)  !important; }
+.ts-summary-item--active-pending { border-color: rgba(192,132,252,0.4)  !important; background: rgba(192,132,252,0.08) !important; }
+.ts-summary-item--active-failed  { border-color: rgba(248,113,113,0.4)  !important; background: rgba(248,113,113,0.08) !important; }
 
 .ts-summary-divider {
   width: 1px;

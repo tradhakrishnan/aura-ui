@@ -50,7 +50,7 @@ export default function JiraIssues({ onRunAgent }: Props) {
   const [loading, setLoading]       = useState(true)
   const [error, setError]           = useState<string | null>(null)
   const [lastRefresh, setLastRefresh] = useState<Date>(new Date())
-  const [filter, setFilter]         = useState<'all' | 'open' | 'progress' | 'done'>('all')
+  const [filter, setFilter]         = useState<'all' | 'open' | 'progress' | 'done'>('open')
   const [running, setRunning]       = useState<Record<string, boolean>>({})
 
   const refresh = useCallback(async () => {

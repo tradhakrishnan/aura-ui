@@ -22,11 +22,12 @@ import { getLlmConfig, setLlmProvider, type LlmConfig } from './api/agentApi'
 import FrameworkDiagram from './components/FrameworkDiagram'
 import TapEcosystem from './components/TapEcosystem'
 import TechArchitecture from './components/TechArchitecture'
+import UseCases from './components/UseCases'
 import AgentRun from './components/AgentRun'
 import TicketStatus from './components/TicketStatus'
 import JiraIssues from './components/JiraIssues'
 
-type Page = 'home' | 'ecosystem' | 'framework' | 'architecture' | 'team' | 'jira' | 'disclaimer' | 'status' | 'run'
+type Page = 'home' | 'ecosystem' | 'framework' | 'architecture' | 'usecases' | 'team' | 'jira' | 'disclaimer' | 'status' | 'run'
 
 interface NavItem {
   page: Page
@@ -35,9 +36,10 @@ interface NavItem {
 }
 
 const NAV_ITEMS: NavItem[] = [
-  { page: 'ecosystem',    label: 'TAP Ecosystem'    },
+  // { page: 'ecosystem',    label: 'TAP Ecosystem'    },  // hidden
   { page: 'framework',    label: 'AURA Framework'   },
   { page: 'architecture', label: 'Tech Architecture' },
+  { page: 'usecases',     label: 'Use Cases'        },
   { page: 'jira',         label: 'Jira Issues',   cls: 'nav-jira-btn'       },
   { page: 'status',       label: 'Ticket Status', cls: 'nav-status-btn'     },
   { page: 'run',          label: '▶ Run Agent',   cls: 'nav-run-btn'        },
@@ -80,7 +82,7 @@ function LlmProviderBar() {
 
   return (
     <div className="llm-provider-bar">
-      {config.providers.map(p => {
+      {config.providers.filter(p => p.id !== 'claude').map(p => {
         const isActive = config.active === p.id
         return (
           <button
@@ -124,7 +126,7 @@ function AppHeader({ page, onNav }: { page: Page; onNav: (p: Page) => void }) {
       <div className="header-content">
         <button className="logo-badge" onClick={() => onNav('home')}>
           <img src="/favicon.svg" className="logo-badge-icon" alt="" />
-          <MarriottM className="logo-maura-m" />AURA
+          AURA
         </button>
         <nav className="nav-links">
           {NAV_ITEMS.map(({ page: p, label, cls }) => (
@@ -176,10 +178,9 @@ function HomePage({ onRunAgent }: { onRunAgent: () => void }) {
       <section className="hero-section">
         <div className="hero-badge">Marriott Codefest 4.0</div>
         <h1 className="hero-title">
-          <MarriottM className="hero-maura-m" /><span className="aura-text">AURA</span>
+          <span className="aura-text">AURA</span>
         </h1>
         <p className="hero-full-name">
-          <span className="hero-full-m">Marriott</span>{' '}
           <span className="hero-full-aura">Autonomous Unified Resolution Agent</span>
         </p>
         <p className="hero-description">
@@ -192,9 +193,6 @@ function HomePage({ onRunAgent }: { onRunAgent: () => void }) {
           ▶ Run mAURA Agents
         </button>
       </section>
-      <div className="page-disclaimer">
-        <DisclaimerBox />
-      </div>
     </div>
   )
 }
@@ -341,15 +339,7 @@ function App() {
 
   const goHome = () => setPage('home')
 
-  /* ── Full-screen pages (own header, no app shell) ── */
-  if (page === 'status') {
-    return <TicketStatus onViewRun={(runId) => openRun(runId)} onBack={goHome} />
-  }
-  if (page === 'run') {
-    return <AgentRun initialRunId={selectedRunId} onBack={goHome} />
-  }
-
-  /* ── App-shell pages (persistent nav always visible) ── */
+  /* ── All pages share the persistent app shell nav ── */
   return (
     <div className="app">
       <DisclaimerBanner />
@@ -360,9 +350,12 @@ function App() {
         {page === 'ecosystem'    && <EcosystemPage />}
         {page === 'framework'    && <FrameworkPage />}
         {page === 'architecture' && <ArchitecturePage />}
+        {page === 'usecases'     && <div className="page-content" key="usecases"><UseCases /></div>}
         {page === 'team'         && <TeamPage />}
         {page === 'jira'         && <JiraIssues onRunAgent={(runId) => openRun(runId)} />}
         {page === 'disclaimer'   && <DisclaimerPage />}
+        {page === 'status'       && <TicketStatus onViewRun={(runId) => openRun(runId)} onBack={goHome} />}
+        {page === 'run'          && <AgentRun initialRunId={selectedRunId} onBack={goHome} onJira={() => setPage('jira')} onStatus={() => setPage('status')} />}
       </main>
     </div>
   )

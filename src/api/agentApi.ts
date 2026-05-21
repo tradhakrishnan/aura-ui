@@ -40,6 +40,8 @@ export interface RunData {
   jira_issue_key?: string
   jira_browse_url?: string
   error?: string
+  agent_tokens?: Record<string, { input: number; output: number; total: number }>
+  total_tokens?: { input: number; output: number; total: number }
 }
 
 export interface RunSummary {
@@ -175,6 +177,16 @@ export async function setLlmProvider(provider: string): Promise<void> {
     body: JSON.stringify({ provider }),
   })
   if (!res.ok) throw new Error(`Switch failed: ${res.statusText}`)
+}
+
+export async function parseTicket(text: string): Promise<TicketPayload> {
+  const res = await fetch(`${BASE}/parse-ticket`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ text }),
+  })
+  if (!res.ok) throw new Error(`Parse failed: ${res.statusText}`)
+  return res.json()
 }
 
 export async function getRunPrompts(runId: string): Promise<RunPrompts> {

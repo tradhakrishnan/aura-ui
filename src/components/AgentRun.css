@@ -1,9 +1,17 @@
 /* ── Layout ─────────────────────────────────────────────────────────────── */
 .ar-page {
-  min-height: 100vh;
-  background: #0d1117;
   color: #e6edf3;
   font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
+  overflow-x: hidden;
+}
+
+/* Slim action bar — replaces full custom header; nav is handled by AppHeader */
+.ar-action-bar {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+  padding: 8px 24px 0;
 }
 
 .ar-header {
@@ -139,6 +147,360 @@
   padding: 0 24px;
 }
 
+/* ── Pick view ───────────────────────────────────────────────────────────── */
+.ar-pick-wrap {
+  max-width: 760px;
+  margin: 52px auto;
+  padding: 0 24px;
+  text-align: center;
+}
+
+.ar-pick-eyebrow {
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #a78bfa;
+  margin-bottom: 10px;
+}
+
+.ar-pick-title {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: #e6edf3;
+  margin: 0 0 10px;
+}
+
+.ar-pick-sub {
+  font-size: 0.9rem;
+  color: #8b949e;
+  margin: 0 0 40px;
+}
+
+.ar-pick-cards {
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.ar-pick-card {
+  flex: 1;
+  min-width: 280px;
+  max-width: 340px;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 14px;
+  padding: 28px 24px;
+  text-align: left;
+  cursor: pointer;
+  transition: border-color 0.2s, background 0.2s, transform 0.15s;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.ar-pick-card:hover {
+  border-color: rgba(139,148,158,0.4);
+  background: rgba(255,255,255,0.055);
+  transform: translateY(-2px);
+}
+.ar-pick-card--prompt {
+  border-color: rgba(167,139,250,0.25);
+}
+.ar-pick-card--prompt:hover {
+  border-color: rgba(167,139,250,0.55);
+  background: rgba(167,139,250,0.06);
+}
+
+.ar-pick-card-icon {
+  font-size: 2rem;
+  line-height: 1;
+}
+
+.ar-pick-card-name {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: #e6edf3;
+}
+
+.ar-pick-card-desc {
+  font-size: 0.84rem;
+  color: #8b949e;
+  line-height: 1.6;
+  flex: 1;
+}
+
+.ar-pick-card-tags {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.ar-pick-tag {
+  font-size: 0.65rem;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: 10px;
+  background: rgba(255,255,255,0.06);
+  color: #8b949e;
+  letter-spacing: 0.04em;
+}
+.ar-pick-tag--ai {
+  background: rgba(167,139,250,0.12);
+  color: #a78bfa;
+}
+
+.ar-pick-btn {
+  width: 100%;
+  padding: 10px 16px;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  font-family: inherit;
+  cursor: pointer;
+  border: 1px solid rgba(255,255,255,0.15);
+  background: rgba(255,255,255,0.06);
+  color: #e6edf3;
+  transition: background 0.15s, border-color 0.15s;
+  margin-top: 4px;
+}
+.ar-pick-btn:hover {
+  background: rgba(255,255,255,0.12);
+  border-color: rgba(255,255,255,0.3);
+}
+.ar-pick-btn--prompt {
+  background: rgba(167,139,250,0.15);
+  border-color: rgba(167,139,250,0.4);
+  color: #c4b5fd;
+}
+.ar-pick-btn--prompt:hover {
+  background: rgba(167,139,250,0.28);
+  border-color: rgba(167,139,250,0.7);
+}
+
+.ar-pick-card--jira {
+  border-color: rgba(38,132,255,0.25);
+}
+.ar-pick-card--jira:hover {
+  border-color: rgba(38,132,255,0.55);
+  background: rgba(38,132,255,0.06);
+}
+.ar-pick-tag--jira {
+  background: rgba(38,132,255,0.12);
+  color: #58a6ff;
+}
+.ar-pick-btn--jira {
+  background: rgba(38,132,255,0.15);
+  border-color: rgba(38,132,255,0.4);
+  color: #58a6ff;
+}
+.ar-pick-btn--jira:hover {
+  background: rgba(38,132,255,0.28);
+  border-color: rgba(38,132,255,0.7);
+}
+
+/* ── Prompt view ─────────────────────────────────────────────────────────── */
+.ar-prompt-wrap {
+  max-width: 680px;
+  margin: 32px auto;
+  padding: 0 24px 60px;
+}
+
+.ar-prompt-back {
+  background: none;
+  border: none;
+  color: #8b949e;
+  font-size: 0.82rem;
+  font-family: inherit;
+  cursor: pointer;
+  padding: 0;
+  margin-bottom: 24px;
+  display: block;
+}
+.ar-prompt-back:hover { color: #e6edf3; }
+
+.ar-prompt-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 28px;
+}
+
+.ar-prompt-icon {
+  font-size: 2.25rem;
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+.ar-prompt-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #e6edf3;
+  margin: 0 0 4px;
+}
+
+.ar-prompt-sub {
+  font-size: 0.85rem;
+  color: #8b949e;
+  margin: 0;
+}
+
+.ar-prompt-input-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.ar-prompt-textarea {
+  width: 100%;
+  box-sizing: border-box;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 10px;
+  padding: 14px 16px;
+  color: #e6edf3;
+  font-size: 0.9rem;
+  font-family: inherit;
+  line-height: 1.65;
+  resize: vertical;
+  transition: border-color 0.2s;
+}
+.ar-prompt-textarea:focus {
+  outline: none;
+  border-color: rgba(167,139,250,0.5);
+}
+.ar-prompt-textarea::placeholder { color: #484f58; }
+
+.ar-prompt-error {
+  font-size: 0.8rem;
+  color: #f85149;
+  padding: 8px 12px;
+  background: rgba(248,81,73,0.08);
+  border: 1px solid rgba(248,81,73,0.2);
+  border-radius: 6px;
+}
+
+.ar-prompt-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.ar-prompt-hint {
+  font-size: 0.75rem;
+  color: #484f58;
+}
+
+.ar-prompt-run-btn {
+  padding: 10px 22px;
+  background: linear-gradient(135deg, #7c3aed, #a78bfa);
+  border: none;
+  border-radius: 8px;
+  color: #fff;
+  font-size: 0.88rem;
+  font-weight: 600;
+  font-family: inherit;
+  cursor: pointer;
+  transition: opacity 0.15s, transform 0.15s;
+}
+.ar-prompt-run-btn:hover:not(:disabled) { opacity: 0.88; transform: translateY(-1px); }
+.ar-prompt-run-btn:disabled { opacity: 0.35; cursor: default; }
+
+.ar-prompt-analyzing {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  padding: 56px 0;
+  text-align: center;
+}
+.ar-prompt-analyzing-label {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #e6edf3;
+}
+.ar-prompt-analyzing-sub {
+  font-size: 0.82rem;
+  color: #8b949e;
+}
+
+.ar-prompt-preview {
+  border: 1px solid rgba(167,139,250,0.3);
+  border-radius: 12px;
+  overflow: hidden;
+  background: rgba(167,139,250,0.04);
+}
+
+.ar-prompt-preview-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 18px;
+  background: rgba(167,139,250,0.1);
+  border-bottom: 1px solid rgba(167,139,250,0.2);
+}
+.ar-prompt-preview-check {
+  font-size: 0.9rem;
+  color: #a78bfa;
+  font-weight: 700;
+}
+.ar-prompt-preview-title {
+  font-size: 0.7rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #a78bfa;
+}
+
+.ar-prompt-preview-grid {
+  padding: 16px 18px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px 24px;
+}
+
+.ar-prompt-preview-row {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.ar-prompt-preview-lbl {
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #484f58;
+}
+.ar-prompt-preview-val {
+  font-size: 0.85rem;
+  color: #e6edf3;
+  word-break: break-word;
+}
+
+.ar-prompt-preview-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 10px;
+  padding: 14px 18px;
+  border-top: 1px solid rgba(167,139,250,0.15);
+}
+
+.ar-prompt-confirm-btn {
+  padding: 9px 20px;
+  background: linear-gradient(135deg, #7c3aed, #a78bfa);
+  border: none;
+  border-radius: 8px;
+  color: #fff;
+  font-size: 0.88rem;
+  font-weight: 600;
+  font-family: inherit;
+  cursor: pointer;
+  transition: opacity 0.15s;
+}
+.ar-prompt-confirm-btn:hover:not(:disabled) { opacity: 0.88; }
+.ar-prompt-confirm-btn:disabled { opacity: 0.4; cursor: default; }
+
 .ar-form-title {
   font-size: 1.5rem;
   font-weight: 700;
@@ -273,6 +635,7 @@
 }
 
 .ar-banner-meta strong { color: #e6edf3; display: block; font-size: 1rem; }
+.ar-banner-meta span   { display: block; }
 
 .ar-retry-btn {
   margin-top: 8px;
@@ -291,11 +654,45 @@
 .ar-retry-btn:disabled { opacity: 0.5; cursor: default; }
 
 /* ── Agent pipeline ──────────────────────────────────────────────────────── */
+.ar-pipeline-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 24px 4px;
+}
+
+.ar-pipeline-label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #484f58;
+}
+
+.ar-collapse-btn {
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: #8b949e;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 6px;
+  padding: 4px 10px;
+  cursor: pointer;
+  transition: color 0.15s, background 0.15s;
+}
+
+.ar-collapse-btn:hover {
+  color: #c9d1d9;
+  background: rgba(255,255,255,0.08);
+}
+
 .ar-pipeline {
-  padding: 16px 24px 48px;
+  padding: 8px 24px 48px;
   display: flex;
   flex-direction: column;
   gap: 0;
+  min-width: 0;
+  overflow-x: hidden;
 }
 
 .ar-agent-pair {
@@ -477,6 +874,26 @@
   text-overflow: ellipsis;
 }
 
+.ar-token-badge {
+  font-size: 0.67rem;
+  font-weight: 500;
+  color: #58a6ff;
+  background: rgba(31,111,235,0.1);
+  border: 1px solid rgba(31,111,235,0.2);
+  border-radius: 10px;
+  padding: 1px 8px;
+  flex-shrink: 0;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.02em;
+}
+
+.ar-total-tokens {
+  font-size: 0.72rem;
+  color: #58a6ff;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.02em;
+}
+
 .ar-tc-tag {
   font-size: 0.6rem;
   font-weight: 700;
@@ -597,6 +1014,10 @@
   border-radius: 8px;
   overflow: hidden;
   margin-left: 42px;
+  width: calc(100% - 42px);
+  max-width: calc(100% - 42px);
+  min-width: 0;
+  box-sizing: border-box;
 }
 
 .ar-final-header {
@@ -626,13 +1047,17 @@
   font-size: 0.85rem;
   line-height: 1.65;
   color: #c9d1d9;
+  word-break: break-word;
+  overflow-wrap: break-word;
+  white-space: normal;
+  min-width: 0;
 }
 
-.ar-final-body p  { margin: 6px 0; }
+.ar-final-body p  { margin: 6px 0; word-break: break-word; overflow-wrap: break-word; }
 .ar-final-body strong { color: #e6edf3; }
 .ar-final-body ul,
 .ar-final-body ol { margin: 6px 0; padding-left: 20px; }
-.ar-final-body li { margin: 3px 0; }
+.ar-final-body li { margin: 3px 0; word-break: break-word; overflow-wrap: break-word; }
 
 /* risk badge (used inside result cards) */
 

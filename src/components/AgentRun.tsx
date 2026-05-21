@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef, useCallback } from 'react'
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 import {
@@ -8,6 +8,7 @@ import {
   approveRun,
   rejectRun,
   retryRun,
+  parseTicket,
   getRunPrompts,
   type TicketPayload,
   type RunData,
@@ -18,6 +19,11 @@ import {
 import './AgentRun.css'
 
 /* ── Agent section metadata ─────────────────────────────────────────────── */
+function formatTokens(n: number): string {
+  if (n >= 1000) return `${(n / 1000).toFixed(1)}K`
+  return String(n)
+}
+
 const SECTIONS = [
   { key: 'sda_open',   label: 'Service Desk Analyst',    tag: 'SDA',  icon: 'SDA',  iconMod: 'sda'  },
   { key: 'spa',        label: 'System & Process Analyst', tag: 'SPA',  icon: 'SPA',  iconMod: 'spa'  },
@@ -368,13 +374,20 @@ function PromptHistoryPanel({ runId, onClose }: { runId: string; onClose: () => 
 interface AgentRunProps {
   initialRunId?: string
   onBack?: () => void
+  onJira?: () => void
+  onStatus?: () => void
 }
 
 /* ── Main component ──────────────────────────────────────────────────────── */
-export default function AgentRun({ initialRunId, onBack }: AgentRunProps) {
-  const [view, setView] = useState<'form' | 'running'>('form')
+export default function AgentRun({ initialRunId, onBack, onJira, onStatus }: AgentRunProps) {
+  const [view, setView] = useState<'pick' | 'form' | 'prompt' | 'running'>(initialRunId ? 'running' : 'pick')
   const [form, setForm] = useState<TicketPayload>(BLANK_FORM)
   const [submitting, setSubmitting] = useState(false)
+  // Prompt mode state
+  const [promptText, setPromptText]   = useState('')
+  const [promptPhase, setPromptPhase] = useState<'input' | 'analyzing' | 'preview'>('input')
+  const [parsedForm, setParsedForm]   = useState<TicketPayload | null>(null)
+  const [parseError, setParseError]   = useState<string | null>(null)
   const [runId, setRunId] = useState<string | null>(null)
   const [runData, setRunData] = useState<RunData | null>(null)
   const [collapsedSections, setCollapsedSections] = useState<Set<string>>(new Set())
@@ -385,9 +398,24 @@ export default function AgentRun({ initialRunId, onBack }: AgentRunProps) {
   const [retrying, setRetrying]     = useState(false)
   const pollRef = useRef<ReturnType<typeof setInterval> | null>(null)
 
+  const loadHistory = () => listRuns().then((data) => {
+    const latest = new Map<string, RunSummary>()
+    for (const r of data) {
+      const key = r.jira_issue_key || r.ticket_id
+      const existing = latest.get(key)
+      if (!existing || r.started_at > existing.started_at) latest.set(key, r)
+    }
+    setHistory([...latest.values()])
+  }).catch(() => {})
+
+  /* Reset collapsed state whenever run changes — all sections start expanded */
+  useEffect(() => {
+    setCollapsedSections(new Set())
+  }, [runId])
+
   /* Load history on mount; pre-load run if initialRunId provided */
   useEffect(() => {
-    listRuns().then(setHistory).catch(() => {})
+    loadHistory()
   }, [])
 
   useEffect(() => {
@@ -400,6 +428,21 @@ export default function AgentRun({ initialRunId, onBack }: AgentRunProps) {
     }
   }, [initialRunId])
 
+  /* Prompt mode — analyze free text and extract ticket fields */
+  const handleAnalyze = useCallback(async (text: string) => {
+    if (!text.trim()) return
+    setPromptPhase('analyzing')
+    setParseError(null)
+    try {
+      const ticket = await parseTicket(text.trim())
+      setParsedForm(ticket)
+      setPromptPhase('preview')
+    } catch {
+      setParseError('Could not extract fields. You can still edit and run manually.')
+      setPromptPhase('input')
+    }
+  }, [])
+
   /* Poll while running */
   useEffect(() => {
     if (!runId) return
@@ -410,7 +453,7 @@ export default function AgentRun({ initialRunId, onBack }: AgentRunProps) {
         if (data.status !== 'running') {
           clearInterval(pollRef.current!)
           pollRef.current = null
-          listRuns().then(setHistory).catch(() => {})
+          loadHistory()
         }
       } catch {/* ignore transient errors */}
     }
@@ -467,7 +510,7 @@ export default function AgentRun({ initialRunId, onBack }: AgentRunProps) {
           if (data.status !== 'running') {
             clearInterval(pollRef.current!)
             pollRef.current = null
-            listRuns().then(setHistory).catch(() => {})
+            loadHistory()
             setOverriding(false)
           }
         } catch {/* ignore */}
@@ -486,7 +529,7 @@ export default function AgentRun({ initialRunId, onBack }: AgentRunProps) {
       await rejectRun(runId)
       setRunData((prev) => prev ? { ...prev, rejected: true, pending_approval: false, ticket_status: 'Rejected', status: 'completed' } : prev)
       if (pollRef.current) { clearInterval(pollRef.current); pollRef.current = null }
-      listRuns().then(setHistory).catch(() => {})
+      loadHistory()
     } catch (err) {
       alert(`Reject failed: ${err}`)
     } finally {
@@ -510,7 +553,7 @@ export default function AgentRun({ initialRunId, onBack }: AgentRunProps) {
           if (data.status !== 'running') {
             clearInterval(pollRef.current!)
             pollRef.current = null
-            listRuns().then(setHistory).catch(() => {})
+            loadHistory()
             setRetrying(false)
           }
         } catch {/* ignore */}
@@ -563,31 +606,226 @@ export default function AgentRun({ initialRunId, onBack }: AgentRunProps) {
     return (runData.ticket_status ?? 'OPEN').toUpperCase()
   }
 
+  /* ── Shared action bar (pick / form / prompt) — nav handled by AppHeader ── */
+  const sharedHeader = (
+    <div className="ar-action-bar">
+      <button className="ar-btn" onClick={() => setShowHistory(!showHistory)}>
+        History
+        {history.length > 0 && <span className="ar-history-badge">{history.length}</span>}
+      </button>
+    </div>
+  )
+
+  /* ── Pick view — choose Manual vs Prompt ───────────────────────────────── */
+  if (view === 'pick') {
+    return (
+      <div className="ar-page">
+        {sharedHeader}
+        {showHistory && (
+          <div className="ar-history-panel">
+            <div className="ar-history-title">Recent Runs</div>
+            {history.map((r) => (
+              <div key={r.run_id} className="ar-history-item" onClick={() => loadRun(r.run_id)}>
+                <div className="ar-history-item-id">
+                  <span className={`ar-status-dot ar-status-dot--${r.status === 'completed' ? 'completed' : r.status === 'running' ? 'running' : 'failed'}`} />
+                  {r.ticket_id}
+                </div>
+                <div className="ar-history-item-meta">{r.run_id.slice(0, 12)}… · {r.started_at?.slice(0, 16).replace('T', ' ')}</div>
+              </div>
+            ))}
+            {history.length === 0 && <p style={{ fontSize: '0.8rem', color: '#8b949e' }}>No runs yet.</p>}
+          </div>
+        )}
+        <div className="ar-pick-wrap">
+          <div className="ar-pick-eyebrow">Select Mode</div>
+          <h2 className="ar-pick-title">How would you like to run AURA?</h2>
+          <p className="ar-pick-sub">Choose how you want to submit a support ticket to the agent pipeline.</p>
+          <div className="ar-pick-cards">
+
+            {/* Manual card */}
+            <div className="ar-pick-card" onClick={() => setView('form')}>
+              <div className="ar-pick-card-icon">📋</div>
+              <div className="ar-pick-card-name">Manual Form</div>
+              <div className="ar-pick-card-desc">
+                Fill out the structured ticket form — specify ticket ID, severity, affected system, and all relevant fields.
+              </div>
+              <div className="ar-pick-card-tags">
+                <span className="ar-pick-tag">Full control</span>
+                <span className="ar-pick-tag">All fields</span>
+              </div>
+              <button className="ar-pick-btn" onClick={(e) => { e.stopPropagation(); setView('form') }}>
+                Run Agent — Manual
+              </button>
+            </div>
+
+            {/* Prompt card */}
+            <div className="ar-pick-card ar-pick-card--prompt" onClick={() => setView('prompt')}>
+              <div className="ar-pick-card-icon">💬</div>
+              <div className="ar-pick-card-name">Prompt Mode</div>
+              <div className="ar-pick-card-desc">
+                Describe the production issue in plain language. AURA's AI will extract the ticket details and run the pipeline automatically.
+              </div>
+              <div className="ar-pick-card-tags">
+                <span className="ar-pick-tag ar-pick-tag--ai">AI-powered</span>
+                <span className="ar-pick-tag ar-pick-tag--ai">Natural language</span>
+              </div>
+              <button className="ar-pick-btn ar-pick-btn--prompt" onClick={(e) => { e.stopPropagation(); setView('prompt') }}>
+                Run Agent — Prompt
+              </button>
+            </div>
+
+            {/* Jira card */}
+            <div className="ar-pick-card ar-pick-card--jira" onClick={() => onJira?.()}>
+              <div className="ar-pick-card-icon">🔗</div>
+              <div className="ar-pick-card-name">Jira Issues</div>
+              <div className="ar-pick-card-desc">
+                Browse open Jira issues from your project and run AURA directly on any ticket with one click.
+              </div>
+              <div className="ar-pick-card-tags">
+                <span className="ar-pick-tag ar-pick-tag--jira">Open issues</span>
+                <span className="ar-pick-tag ar-pick-tag--jira">One-click run</span>
+              </div>
+              <button className="ar-pick-btn ar-pick-btn--jira" onClick={(e) => { e.stopPropagation(); onJira?.() }}>
+                View Jira Issues
+              </button>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    )
+  }
+
+  /* ── Prompt view — describe issue in plain language ─────────────────────── */
+  if (view === 'prompt') {
+    const PROMPT_DEMOS = [
+      { label: 'Hotel missing from location', text: 'Hotel code PARBA is expected to be listed under control location QCMG1G but is not present in the controlled hotels array. This is causing downstream assignment failures for properties in that region.' },
+      { label: 'User EID missing app assignment', text: 'User GPBGY085 does not have an active MARSHA application assignment. They are unable to log into the reservation system and impacting check-in operations at 3 properties.' },
+      { label: 'Inactive hotel blocking sync', text: 'Hotel SUXAK is marked as inactive in ACRS but still appearing in the MINT sync queue causing repeated sync failures for the last 6 hours.' },
+    ]
+    return (
+      <div className="ar-page">
+        {sharedHeader}
+        <div className="ar-prompt-wrap">
+          <button className="ar-prompt-back" onClick={() => { setView('pick'); setPromptPhase('input'); setParseError(null) }}>
+            ← Back
+          </button>
+
+          <div className="ar-prompt-header">
+            <div className="ar-prompt-icon">💬</div>
+            <div>
+              <h2 className="ar-prompt-title">Describe Your Issue</h2>
+              <p className="ar-prompt-sub">AURA will extract ticket fields using AI and run the 8-agent pipeline.</p>
+            </div>
+          </div>
+
+          {/* Demo quick-fills */}
+          {promptPhase === 'input' && (
+            <div className="ar-demo-row" style={{ marginBottom: '16px' }}>
+              <span className="ar-demo-label">Demo scenarios:</span>
+              {PROMPT_DEMOS.map((d) => (
+                <button key={d.label} type="button" className="ar-demo-btn"
+                  onClick={() => setPromptText(d.text)}>
+                  {d.label}
+                </button>
+              ))}
+            </div>
+          )}
+
+          {/* Input phase */}
+          {promptPhase === 'input' && (
+            <div className="ar-prompt-input-wrap">
+              <textarea
+                className="ar-prompt-textarea"
+                placeholder="Describe the production issue in plain language…&#10;&#10;e.g. User WITSF960 is missing ACRS permission 'Revenue Manager' and cannot access the revenue dashboard since this morning."
+                value={promptText}
+                onChange={(e) => setPromptText(e.target.value)}
+                rows={7}
+              />
+              {parseError && <div className="ar-prompt-error">{parseError}</div>}
+              <div className="ar-prompt-actions">
+                <span className="ar-prompt-hint">{promptText.length}/1000 characters</span>
+                <button
+                  className="ar-prompt-run-btn"
+                  disabled={!promptText.trim()}
+                  onClick={() => handleAnalyze(promptText)}
+                >
+                  Analyze &amp; Run →
+                </button>
+              </div>
+            </div>
+          )}
+
+          {/* Analyzing phase */}
+          {promptPhase === 'analyzing' && (
+            <div className="ar-prompt-analyzing">
+              <div className="ar-dots">
+                <div className="ar-dot" /><div className="ar-dot" /><div className="ar-dot" />
+              </div>
+              <div className="ar-prompt-analyzing-label">Analyzing your request…</div>
+              <div className="ar-prompt-analyzing-sub">Extracting ticket fields with AI</div>
+            </div>
+          )}
+
+          {/* Preview phase */}
+          {promptPhase === 'preview' && parsedForm && (
+            <div className="ar-prompt-preview">
+              <div className="ar-prompt-preview-header">
+                <span className="ar-prompt-preview-check">✓</span>
+                <span className="ar-prompt-preview-title">Fields Extracted</span>
+              </div>
+              <div className="ar-prompt-preview-grid">
+                {[
+                  { label: 'Ticket ID',  value: parsedForm.ticket_id },
+                  { label: 'Title',      value: parsedForm.title },
+                  { label: 'Severity',   value: parsedForm.severity },
+                  { label: 'System',     value: parsedForm.affected_system || '—' },
+                  { label: 'Hotel',      value: parsedForm.affected_hotel || '—' },
+                  { label: 'Location',   value: parsedForm.affected_location || '—' },
+                  { label: 'EID',        value: parsedForm.affected_eid || '—' },
+                  { label: 'Reported by',value: parsedForm.reported_by || '—' },
+                ].map(({ label, value }) => (
+                  <div key={label} className="ar-prompt-preview-row">
+                    <span className="ar-prompt-preview-lbl">{label}</span>
+                    <span className="ar-prompt-preview-val">{value}</span>
+                  </div>
+                ))}
+              </div>
+              <div className="ar-prompt-preview-actions">
+                <button className="ar-btn" onClick={() => {
+                  setForm(parsedForm)
+                  setView('form')
+                }}>
+                  ✏ Edit Fields
+                </button>
+                <button className="ar-prompt-confirm-btn" onClick={async () => {
+                  setSubmitting(true)
+                  try {
+                    const { run_id } = await submitTicket(parsedForm)
+                    setRunId(run_id)
+                    setView('running')
+                    const data = await getRun(run_id)
+                    setRunData(data)
+                  } catch { /* ignore */ } finally {
+                    setSubmitting(false)
+                  }
+                }} disabled={submitting}>
+                  {submitting ? 'Starting…' : '▶ Confirm & Run'}
+                </button>
+              </div>
+            </div>
+          )}
+
+        </div>
+      </div>
+    )
+  }
+
   /* ── Form view ───────────────────────────────────────────────────────────── */
   if (view === 'form') {
     return (
       <div className="ar-page">
-        {/* Header */}
-        <div className="ar-header">
-          <div className="ar-header-left">
-            <span className="ar-logo">AURA</span>
-            <div>
-              <div className="ar-header-title">Autonomous Unified Resolution Agent</div>
-              <div className="ar-header-subtitle">Marriott Codefest 4.0</div>
-            </div>
-          </div>
-          <div className="ar-header-right">
-            {onBack && (
-              <button className="ar-btn" onClick={onBack}>← Home</button>
-            )}
-            <button className="ar-btn" onClick={() => setShowHistory(!showHistory)}>
-              History
-              {history.length > 0 && <span className="ar-history-badge">{history.length}</span>}
-            </button>
-          </div>
-        </div>
-
-        {/* History panel */}
+        {sharedHeader}
         {showHistory && (
           <div className="ar-history-panel">
             <div className="ar-history-title">Recent Runs</div>
@@ -606,6 +844,7 @@ export default function AgentRun({ initialRunId, onBack }: AgentRunProps) {
 
         {/* Form */}
         <div className="ar-form-wrap">
+          <button className="ar-prompt-back" onClick={() => setView('pick')}>← Options</button>
           <div className="ar-form-title">Submit a Support Ticket</div>
           <div className="ar-form-desc">
             AURA's 7-agent pipeline will automatically diagnose, escalate, execute, and validate — then close the ticket.
@@ -730,27 +969,15 @@ export default function AgentRun({ initialRunId, onBack }: AgentRunProps) {
 
   return (
     <div className="ar-page">
-      {/* Header */}
-      <div className="ar-header">
-        <div className="ar-header-left">
-          <span className="ar-logo">AURA</span>
-          <div>
-            <div className="ar-header-title">Autonomous Unified Resolution Agent</div>
-            <div className="ar-header-subtitle">Marriott Codefest 4.0</div>
-          </div>
-        </div>
-        <div className="ar-header-right">
-          {onBack && (
-            <button className="ar-btn" onClick={onBack}>← Home</button>
-          )}
-          <button className="ar-btn" onClick={() => { setView('form'); setRunData(null); setRunId(null); setForm(BLANK_FORM) }}>
-            + New Ticket
-          </button>
-          <button className="ar-btn" onClick={() => setShowHistory(!showHistory)}>
-            History
-            {history.length > 0 && <span className="ar-history-badge">{history.length}</span>}
-          </button>
-        </div>
+      {/* Action bar — nav handled by AppHeader */}
+      <div className="ar-action-bar">
+        <button className="ar-btn" onClick={() => { setView('pick'); setRunData(null); setRunId(null); setForm(BLANK_FORM); setPromptText(''); setPromptPhase('input') }}>
+          + New Ticket
+        </button>
+        <button className="ar-btn" onClick={() => setShowHistory(!showHistory)}>
+          History
+          {history.length > 0 && <span className="ar-history-badge">{history.length}</span>}
+        </button>
       </div>
 
       {/* History panel */}
@@ -806,6 +1033,9 @@ export default function AgentRun({ initialRunId, onBack }: AgentRunProps) {
           <div className="ar-banner-meta">
             <strong>{completedCount}/{totalAgents} agents</strong>
             {runData.started_at && <span>{runData.started_at.slice(0, 16).replace('T', ' ')} UTC</span>}
+            {runData.total_tokens && runData.total_tokens.total > 0 && (
+              <span className="ar-total-tokens">{formatTokens(runData.total_tokens.total)} tokens total</span>
+            )}
             {runData.status === 'failed' && !runData.rejected && (
               <button
                 className="ar-retry-btn"
@@ -828,6 +1058,25 @@ export default function AgentRun({ initialRunId, onBack }: AgentRunProps) {
             <div className="ar-dot" />
           </div>
           Agents working… ({completedCount}/{totalAgents} complete)
+        </div>
+      )}
+
+      {/* Pipeline header with collapse toggle */}
+      {runData && (
+        <div className="ar-pipeline-header">
+          <span className="ar-pipeline-label">Agent Pipeline</span>
+          <button
+            className="ar-collapse-btn"
+            onClick={() => {
+              const allKeys = SECTIONS.map(s => s.key)
+              const allCollapsed = allKeys.every(k => collapsedSections.has(k))
+              setCollapsedSections(allCollapsed ? new Set() : new Set(allKeys))
+            }}
+          >
+            {SECTIONS.map(s => s.key).every(k => collapsedSections.has(k))
+              ? '⊞ Expand All Agents'
+              : '⊟ Collapse All Agents'}
+          </button>
         </div>
       )}
 
@@ -857,6 +1106,11 @@ export default function AgentRun({ initialRunId, onBack }: AgentRunProps) {
                     <div className={`ar-tc-icon ar-tc-icon--${sec.iconMod}`}>{sec.icon}</div>
                     <span className="ar-tc-badge ar-tc-badge--call">AGENT CALL</span>
                     <span className="ar-tc-name">{sec.label}</span>
+                    {st === 'done' && runData?.agent_tokens?.[sec.key] && (
+                      <span className="ar-token-badge">
+                        {formatTokens(runData.agent_tokens[sec.key].total)}
+                      </span>
+                    )}
                     <span className="ar-tc-tag">{sec.tag}</span>
                     {st === 'working' && (
                       <span className="ar-tc-working">
