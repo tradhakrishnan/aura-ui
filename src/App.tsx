@@ -46,10 +46,10 @@ const NAV_ITEMS: NavItem[] = [
 ]
 
 const TEAM = [
-  { name: 'Tamilselvan',   role: 'Overall Architecture · AI & Agentic Design · Orchestration', tag: 'LangGraph · Claude API · FastAPI',  icon: '🤖' },
-  { name: 'Suresh',        role: 'Frontend & UI/UX · Jira Integration',                        tag: 'React 19 · TypeScript · Jira API',  icon: '🖥️' },
-  { name: 'Bhagvan (MTA)', role: 'Backend Spring Boot Services',                               tag: 'Spring Boot · Java 21',             icon: '☕' },
-  { name: 'Hemant (MTA)',  role: 'FastAPI Python Services',                                    tag: 'FastAPI · Python 3.11',             icon: '🐍' },
+  { name: 'Tamilselvan Radhakrishnan', role: 'Overall Architecture · AI & Agentic Design · Orchestration', tag: 'LangGraph · Claude API · FastAPI',  icon: '🤖' },
+  { name: 'Suresh Rengasamy',          role: 'Frontend & UI/UX · Jira Integration',                        tag: 'React 19 · TypeScript · Jira API',  icon: '🖥️' },
+  { name: 'Bhagvan Das (MTA)',          role: 'Backend Spring Boot Services',                               tag: 'Spring Boot · Java 21',             icon: '☕' },
+  { name: 'Hemant Chauhan (MTA)',       role: 'FastAPI Python Services',                                    tag: 'FastAPI · Python 3.11',             icon: '🐍' },
 ]
 
 const PROVIDER_ICONS: Record<string, string> = {
@@ -248,7 +248,7 @@ function TeamPage() {
           <div className="team-mentor-card">
             <div className="team-mentor-icon">🌟</div>
             <div className="team-mentor-info">
-              <div className="team-mentor-name">Paul</div>
+              <div className="team-mentor-name">Paul Donlon</div>
               <div className="team-mentor-desc">
                 Provided full guidance, strategic direction, and mentorship throughout the project.
                 Reviewed architecture decisions, fine-tuned application design, and ensured
