@@ -18,7 +18,7 @@ const RISK_MOD: Record<string, string> = {
 }
 
 function statusMod(r: RunSummary): string {
-  if (r.rejected)               return 'failed'
+  if (r.rejected)               return 'rejected'
   if (r.pending_approval)       return 'pending'
   if (r.status === 'running')   return 'running'
   if (r.status === 'failed')    return 'failed'
@@ -51,7 +51,7 @@ interface Props {
   onBack: () => void
 }
 
-type FilterKey = 'total' | 'running' | 'completed' | 'pending' | 'failed'
+type FilterKey = 'total' | 'running' | 'completed' | 'pending' | 'rejected' | 'failed'
 
 export default function TicketStatus({ onViewRun, onBack }: Props) {
   const [runs, setRuns]       = useState<RunSummary[]>([])
@@ -92,15 +92,17 @@ export default function TicketStatus({ onViewRun, onBack }: Props) {
     total:     runs.length,
     running:   runs.filter((r) => r.status === 'running' && !r.pending_approval).length,
     completed: runs.filter((r) => r.status === 'completed' && !r.rejected).length,
-    failed:    runs.filter((r) => r.status === 'failed' || r.rejected).length,
+    failed:    runs.filter((r) => r.status === 'failed' && !r.rejected).length,
     pending:   runs.filter((r) => r.pending_approval).length,
+    rejected:  runs.filter((r) => r.rejected).length,
   }
 
   const filteredRuns = filter === 'total'     ? runs
     : filter === 'running'   ? runs.filter((r) => r.status === 'running' && !r.pending_approval)
     : filter === 'completed' ? runs.filter((r) => r.status === 'completed' && !r.rejected)
     : filter === 'pending'   ? runs.filter((r) => r.pending_approval)
-    : /* failed */              runs.filter((r) => r.status === 'failed' || r.rejected)
+    : filter === 'rejected'  ? runs.filter((r) => r.rejected)
+    : /* failed */              runs.filter((r) => r.status === 'failed' && !r.rejected)
 
   const handleFilter = (key: FilterKey) =>
     setFilter(prev => prev === key ? 'total' : key)
@@ -125,6 +127,7 @@ export default function TicketStatus({ onViewRun, onBack }: Props) {
             { key: 'running',   label: 'Running',          value: counts.running,   mod: 'running'   },
             { key: 'completed', label: 'Completed',        value: counts.completed, mod: 'completed' },
             { key: 'pending',   label: 'Awaiting Approval',value: counts.pending,   mod: 'pending'   },
+            { key: 'rejected',  label: 'Rejected',         value: counts.rejected,  mod: 'rejected'  },
             { key: 'failed',    label: 'Failed',           value: counts.failed,    mod: 'failed'    },
           ] as { key: FilterKey; label: string; value: number; mod: string }[]).map((item, i, arr) => (
             <>
