@@ -9,6 +9,7 @@ import {
   rejectRun,
   retryRun,
   parseTicket,
+  getDemoScenarios,
   getRunPrompts,
   type TicketPayload,
   type RunData,
@@ -50,59 +51,20 @@ const BLANK_FORM: TicketPayload = {
   reported_by: '',
 }
 
-const DEMO_TICKETS: { label: string; form: TicketPayload }[] = [
-  {
-    label: 'Hotel missing from location',
-    form: {
-      ticket_id: `INC${Math.floor(100000 + Math.random() * 900000)}`,
-      source: 'Manual',
-      title: 'Hotel code 7L0NF5RH missing for the control location UWABWJ',
-      description:
-        'Hotel 7L0NF5RH is expected to be listed under control location UWABWJ (Transit Business Base 732) but is not present in the controlled hotels array. ' +
-        'This is causing downstream assignment failures for properties in that region.',
-      severity: 'High',
-      affected_system: 'SAP',
-      affected_hotel: '7L0NF5RH',
-      affected_location: 'UWABWJ',
-      affected_eid: '',
-      reported_by: 'ops-team',
-    },
-  },
-  {
-    label: 'User EID missing app assignment',
-    form: {
-      ticket_id: `INC${Math.floor(100000 + Math.random() * 900000)}`,
-      source: 'Manual',
-      title: 'User 3C9MTEX2 missing CRS-1 app assignment',
-      description:
-        'User 3C9MTEX2 does not have an active CRS-1 application assignment. ' +
-        'They are unable to log into the reservation system and impacting check-in operations at 3 properties.',
-      severity: 'Critical',
-      affected_system: 'CRS1',
-      affected_hotel: '',
-      affected_location: '',
-      affected_eid: '3C9MTEX2',
-      reported_by: 'helpdesk',
-    },
-  },
-  {
-    label: 'Inactive hotel blocking sync',
-    form: {
-      ticket_id: `INC${Math.floor(100000 + Math.random() * 900000)}`,
-      source: 'Manual',
-      title: 'Inactive hotel 63H8C3ZJ blocking CRS-2 location sync',
-      description:
-        'Hotel 63H8C3ZJ has status Inactive in SAP but is still referenced in the CRS-2 assignment feed. ' +
-        'This is causing sync errors and preventing nightly reconciliation from completing.',
-      severity: 'Medium',
-      affected_system: 'CRS2',
-      affected_hotel: '63H8C3ZJ',
-      affected_location: '',
-      affected_eid: '',
-      reported_by: 'integration-team',
-    },
-  },
-]
+function scenarioToForm(s: any): TicketPayload {
+  return {
+    ticket_id:        `INC${Math.floor(100000 + Math.random() * 900000)}`,
+    source:           'Manual',
+    title:            s.title,
+    description:      s.description,
+    severity:         s.severity,
+    affected_system:  s.system,
+    affected_hotel:   s.hotel   || '',
+    affected_location: s.location || '',
+    affected_eid:     s.eid     || '',
+    reported_by:      s.reported_by || '',
+  }
+}
 
 /* ── Agent call context (what the agent receives as input) ──────────────── */
 function AgentCallContext({ section, runData }: { section: typeof SECTIONS[0]; runData: RunData | null }) {
@@ -396,6 +358,7 @@ export default function AgentRun({ initialRunId, onBack, onJira, onStatus }: Age
   const [overriding, setOverriding] = useState(false)
   const [rejecting, setRejecting]   = useState(false)
   const [retrying, setRetrying]     = useState(false)
+  const [demoScenarios, setDemoScenarios] = useState<any[]>([])
   const pollRef = useRef<ReturnType<typeof setInterval> | null>(null)
 
   const loadHistory = () => listRuns().then((data) => {
@@ -413,9 +376,10 @@ export default function AgentRun({ initialRunId, onBack, onJira, onStatus }: Age
     setCollapsedSections(new Set())
   }, [runId])
 
-  /* Load history on mount; pre-load run if initialRunId provided */
+  /* Load history and fresh demo scenarios on mount */
   useEffect(() => {
     loadHistory()
+    getDemoScenarios().then(setDemoScenarios).catch(() => {})
   }, [])
 
   useEffect(() => {
@@ -698,11 +662,7 @@ export default function AgentRun({ initialRunId, onBack, onJira, onStatus }: Age
 
   /* ── Prompt view — describe issue in plain language ─────────────────────── */
   if (view === 'prompt') {
-    const PROMPT_DEMOS = [
-      { label: 'Hotel missing from location', text: 'Hotel code 7L0NF5RH is expected to be listed under control location UWABWJ (Transit Business Base 732) but is not present in the controlled hotels array. This is causing downstream assignment failures for properties in that region.' },
-      { label: 'User EID missing app assignment', text: 'User 3C9MTEX2 does not have an active CRS-1 application assignment. They are unable to log into the reservation system and impacting check-in operations at 3 properties.' },
-      { label: 'Inactive hotel blocking sync', text: 'Hotel 63H8C3ZJ is marked as inactive in SAP but is still referenced in the CRS-2 assignment feed causing sync errors and preventing nightly reconciliation from completing.' },
-    ]
+    const PROMPT_DEMOS = demoScenarios.map(s => ({ label: s.label, text: s.description }))
     return (
       <div className="ar-page">
         {sharedHeader}
@@ -853,14 +813,14 @@ export default function AgentRun({ initialRunId, onBack, onJira, onStatus }: Age
           {/* Demo presets */}
           <div className="ar-demo-row">
             <span className="ar-demo-label">Demo scenarios:</span>
-            {DEMO_TICKETS.map((d) => (
+            {demoScenarios.map((s) => (
               <button
-                key={d.label}
+                key={s.label}
                 type="button"
                 className="ar-demo-btn"
-                onClick={() => setForm({ ...d.form, ticket_id: `INC${Math.floor(100000 + Math.random() * 900000)}` })}
+                onClick={() => setForm(scenarioToForm(s))}
               >
-                {d.label}
+                {s.label}
               </button>
             ))}
           </div>

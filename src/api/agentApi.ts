@@ -179,6 +179,12 @@ export async function setLlmProvider(provider: string): Promise<void> {
   if (!res.ok) throw new Error(`Switch failed: ${res.statusText}`)
 }
 
+export async function getDemoScenarios(): Promise<any[]> {
+  const res = await fetch(`${BASE}/demo-scenarios`)
+  if (!res.ok) return []
+  return res.json()
+}
+
 export async function parseTicket(text: string): Promise<TicketPayload> {
   const res = await fetch(`${BASE}/parse-ticket`, {
     method: 'POST',
