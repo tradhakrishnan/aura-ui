@@ -700,8 +700,8 @@ export default function AgentRun({ initialRunId, onBack, onJira, onStatus }: Age
   if (view === 'prompt') {
     const PROMPT_DEMOS = [
       { label: 'Hotel missing from location', text: 'Hotel code PARBA is expected to be listed under control location QCMG1G but is not present in the controlled hotels array. This is causing downstream assignment failures for properties in that region.' },
-      { label: 'User EID missing app assignment', text: 'User GPBGY085 does not have an active MARSHA application assignment. They are unable to log into the reservation system and impacting check-in operations at 3 properties.' },
-      { label: 'Inactive hotel blocking sync', text: 'Hotel SUXAK is marked as inactive in ACRS but still appearing in the MINT sync queue causing repeated sync failures for the last 6 hours.' },
+      { label: 'User EID missing app assignment', text: 'User GPBGY085 does not have an active CRS-1 application assignment. They are unable to log into the reservation system and impacting check-in operations at 3 properties.' },
+      { label: 'Inactive hotel blocking sync', text: 'Hotel SUXAK is marked as inactive in CRS-2 but still appearing in the MITE sync queue causing repeated sync failures for the last 6 hours.' },
     ]
     return (
       <div className="ar-page">
@@ -737,7 +737,7 @@ export default function AgentRun({ initialRunId, onBack, onJira, onStatus }: Age
             <div className="ar-prompt-input-wrap">
               <textarea
                 className="ar-prompt-textarea"
-                placeholder="Describe the production issue in plain language…&#10;&#10;e.g. User WITSF960 is missing ACRS permission 'Revenue Manager' and cannot access the revenue dashboard since this morning."
+                placeholder="Describe the production issue in plain language…&#10;&#10;e.g. User WITSF960 is missing CRS-2 permission 'Revenue Manager' and cannot access the revenue dashboard since this morning."
                 value={promptText}
                 onChange={(e) => setPromptText(e.target.value)}
                 rows={7}

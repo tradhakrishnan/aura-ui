@@ -102,6 +102,7 @@
   display: flex;
   gap: 8px;
   width: 100%;
+  align-items: stretch;
 }
 
 /* ── Row layouts ── */
@@ -127,8 +128,14 @@
   min-width: 0;
 }
 
+.ta-service-group--flex:first-child {
+  flex: 0 0 auto;
+  width: fit-content;
+}
+
 .ta-service-group--flex .ta-row {
   width: 100%;
+  align-items: stretch;
 }
 
 .ta-group-label {
@@ -156,11 +163,13 @@
 .ta-card--amber { border-color: rgba(245, 158, 11, 0.35); }
 .ta-card--amber:hover { border-color: rgba(245, 158, 11, 0.6); }
 
-.ta-card--blue { border-color: rgba(96, 165, 250, 0.35); }
+.ta-card--blue { border-color: rgba(96, 165, 250, 0.35); flex: 0 0 auto !important; min-width: 130px; }
 .ta-card--blue:hover { border-color: rgba(96, 165, 250, 0.6); }
 
-.ta-card--teal { border-color: rgba(45, 212, 191, 0.3); }
+.ta-card--teal { border-color: rgba(45, 212, 191, 0.3); padding: 4px 6px; flex: 0 0 auto !important; min-width: 130px; }
 .ta-card--teal:hover { border-color: rgba(45, 212, 191, 0.55); }
+.ta-card--teal .ta-card-name { font-size: 0.78rem; }
+.ta-card--teal .ta-card-sub  { font-size: 0.66rem; }
 
 .ta-card--green { border-color: rgba(74, 222, 128, 0.3); }
 .ta-card--green:hover { border-color: rgba(74, 222, 128, 0.55); }
@@ -399,9 +408,20 @@
   border: 1px solid rgba(255, 255, 255, 0.06);
   border-radius: 8px;
   padding: 9px 12px;
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 4px 16px;
+  align-content: start;
+}
+
+.ta-stack-title {
+  grid-column: 1 / -1;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #475569;
+  margin-bottom: 3px;
 }
 
 .ta-stack-row {
@@ -445,9 +465,9 @@
 }
 
 .ta-port-grid {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 4px 10px;
 }
 
 .ta-port-row {
@@ -697,4 +717,13 @@
 .ta-row-pair .ta-layer {
   flex: 1;
   min-width: 0;
+}
+
+.ta-row-pair .ta-layer:first-child {
+  flex: 0 0 auto;
+  width: fit-content;
+}
+
+.ta-row-pair .ta-layer:last-child {
+  flex: 1;
 }

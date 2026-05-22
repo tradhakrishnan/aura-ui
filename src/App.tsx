@@ -40,11 +40,9 @@ const NAV_ITEMS: NavItem[] = [
   { page: 'framework',    label: 'AURA Framework'   },
   { page: 'architecture', label: 'Tech Architecture' },
   { page: 'usecases',     label: 'Use Cases'        },
-  { page: 'jira',         label: 'Jira Issues',   cls: 'nav-jira-btn'       },
   { page: 'status',       label: 'Ticket Status', cls: 'nav-status-btn'     },
-  { page: 'run',          label: '▶ Run Agent',   cls: 'nav-run-btn'        },
+  { page: 'run',          label: '▶ Run AURA Agents', cls: 'nav-run-btn'   },
   { page: 'team',         label: 'Team'             },
-  { page: 'disclaimer',   label: 'Disclaimer',    cls: 'nav-disclaimer-btn' },
 ]
 
 const TEAM = [
@@ -108,26 +106,37 @@ function LlmProviderBar() {
   )
 }
 
-function DisclaimerBanner() {
+function DisclaimerBanner({ onNav }: { onNav: (p: Page) => void }) {
   return (
     <div className="disclaimer-banner">
       <span className="disclaimer-banner-icon">⚠</span>
       <span>
         No Marriott production or non-production data, systems, services, microservices, or source code
-        are used in this product. This is an independent Marriott Codefest 4.0 prototype built solely for demonstration purposes.
+        are used in this product. This is an independent Marriott Codefest 4.0 prototype built solely for demonstration purposes —{' '}
+        <button className="disclaimer-banner-link" onClick={() => onNav('disclaimer')}>Disclaimer</button>
       </span>
     </div>
   )
 }
 
-function AppHeader({ page, onNav }: { page: Page; onNav: (p: Page) => void }) {
+function AppHeader({ page, onNav, model }: { page: Page; onNav: (p: Page) => void; model?: string }) {
   return (
     <header className="app-header">
       <div className="header-content">
-        <button className="logo-badge" onClick={() => onNav('home')}>
-          <img src="/favicon.svg" className="logo-badge-icon" alt="" />
-          AURA
-        </button>
+        <div className="header-left">
+          <button className="logo-badge" onClick={() => onNav('home')}>
+            <img src="/favicon.svg" className="logo-badge-icon" alt="" />
+            AURA
+          </button>
+          {model && (
+            <div className="header-model-badge">
+              <span className="header-model-icon">⚡</span>
+              <span className="header-model-label">LiteLLM</span>
+              <span className="header-model-label">model:</span>
+              <span className="header-model-name">{model}</span>
+            </div>
+          )}
+        </div>
         <nav className="nav-links">
           {NAV_ITEMS.map(({ page: p, label, cls }) => (
             <button
@@ -190,7 +199,7 @@ function HomePage({ onRunAgent }: { onRunAgent: () => void }) {
           decision making to pinpoint the optimal strategy to resolve issues quickly.
         </p>
         <button className="hero-cta" onClick={onRunAgent}>
-          ▶ Run mAURA Agents
+          ▶ Run AURA Agents
         </button>
       </section>
     </div>
@@ -231,27 +240,6 @@ function TeamPage() {
           <p className="team-desc">
             The engineers behind AURA — built in 48 hours for Marriott Codefest 4.0.
           </p>
-        </div>
-
-        {/* Mentor */}
-        <div className="team-mentor-wrap">
-          <div className="team-mentor-label">Mentor &amp; Senior Advisor</div>
-          <div className="team-mentor-card">
-            <div className="team-mentor-icon">🌟</div>
-            <div className="team-mentor-info">
-              <div className="team-mentor-name">Paul</div>
-              <div className="team-mentor-role">Senior Director</div>
-              <div className="team-mentor-desc">
-                Provided full guidance, strategic direction, and mentorship throughout the project.
-                Reviewed architecture decisions, fine-tuned application design, and ensured
-                alignment with Marriott's engineering standards.
-              </div>
-            </div>
-            <div className="team-mentor-badges">
-              <span className="team-mentor-badge">Architecture Review</span>
-              <span className="team-mentor-badge">Strategic Guidance</span>
-            </div>
-          </div>
         </div>
 
         {/* Engineering team */}
@@ -331,6 +319,9 @@ function DisclaimerPage() {
 function App() {
   const [page, setPage]                   = useState<Page>('home')
   const [selectedRunId, setSelectedRunId] = useState<string | undefined>()
+  const [llmConfig, setLlmConfig]         = useState<LlmConfig | null>(null)
+
+  useEffect(() => { getLlmConfig().then(setLlmConfig) }, [])
 
   const openRun = (runId?: string) => {
     setSelectedRunId(runId)
@@ -342,9 +333,7 @@ function App() {
   /* ── All pages share the persistent app shell nav ── */
   return (
     <div className="app">
-      <DisclaimerBanner />
-      <LlmProviderBar />
-      <AppHeader page={page} onNav={(p) => p === 'run' ? openRun() : setPage(p)} />
+      <AppHeader page={page} onNav={(p) => p === 'run' ? openRun() : setPage(p)} model={llmConfig?.model} />
       <main className={`main-content${(page === 'framework' || page === 'architecture') ? ' main-content--wide' : ''}`}>
         {page === 'home'         && <HomePage onRunAgent={() => openRun()} />}
         {page === 'ecosystem'    && <EcosystemPage />}
@@ -357,6 +346,7 @@ function App() {
         {page === 'status'       && <TicketStatus onViewRun={(runId) => openRun(runId)} onBack={goHome} />}
         {page === 'run'          && <AgentRun initialRunId={selectedRunId} onBack={goHome} onJira={() => setPage('jira')} onStatus={() => setPage('status')} />}
       </main>
+      <DisclaimerBanner onNav={setPage} />
     </div>
   )
 }

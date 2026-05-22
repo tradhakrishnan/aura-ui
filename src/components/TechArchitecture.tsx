@@ -84,18 +84,17 @@ const JiraLifecycleLayer = () => (
     </div>
     <div className="ta-jira-lifecycle">
       {[
-        { step: '1', label: 'Issue Listed', desc: 'All project issues fetched; human picks one', color: '#64748b' },
-        { step: '2', label: '▶ Run AURA', desc: 'Human clicks button → POST /agent/run', color: '#2684ff' },
-        { step: '3', label: 'In Progress', desc: 'Jira issue transitioned + "picked up" comment', color: '#f59e0b' },
-        { step: '4', label: 'Agent Updates', desc: 'Comment added after each of 8 agent nodes', color: '#a78bfa' },
-        { step: '5', label: 'Awaiting Approval', desc: 'Comment asks human to approve in AURA UI', color: '#fb923c' },
-        { step: '6', label: 'Approved / Rejected', desc: 'Comment reflects operator decision', color: '#60a5fa' },
-        { step: '7', label: 'Done + Resolved', desc: 'Issue transitioned to Done · resolution comment added', color: '#4ade80' },
+        { step: '1', label: 'Issue Listed', desc: 'Issues fetched; human picks one', color: '#64748b' },
+        { step: '2', label: '▶ Run AURA', desc: 'Human clicks → POST /agent/run', color: '#2684ff' },
+        { step: '3', label: 'In Progress', desc: 'Issue transitioned + comment added', color: '#f59e0b' },
+        { step: '4', label: 'Agent Updates', desc: 'Comment after each of 8 agents', color: '#a78bfa' },
+        { step: '5', label: 'Awaiting Approval', desc: 'Human prompted to approve in UI', color: '#fb923c' },
+        { step: '6', label: 'Approved / Rejected', desc: 'Decision reflected as comment', color: '#60a5fa' },
+        { step: '7', label: 'Done + Resolved', desc: 'Transitioned to Done + resolution comment', color: '#4ade80' },
       ].map((s, i, arr) => (
         <div key={s.step} className="ta-lifecycle-step">
           <div className="ta-lifecycle-node" style={{ borderColor: s.color, background: `${s.color}12` }}>
-            <div className="ta-lifecycle-num" style={{ color: s.color }}>{s.step}</div>
-            <div className="ta-lifecycle-label" style={{ color: s.color }}>{s.label}</div>
+            <div className="ta-lifecycle-label" style={{ color: s.color }}>{s.step} - {s.label}</div>
             <div className="ta-lifecycle-desc">{s.desc}</div>
           </div>
           {i < arr.length - 1 && (
@@ -159,13 +158,7 @@ const AgentLayer = () => (
           <div className="ta-agent-sub ta-agent-sub--bottom">
             <div className="ta-agent-info-item">
               <div className="ta-sub-label">LLM Backbone</div>
-              <div className="ta-llm-card">
-                <div className="ta-llm-icon">✦</div>
-                <div>
-                  <div className="ta-llm-name">Claude Sonnet 4.6</div>
-                  <div className="ta-llm-by">Anthropic API</div>
-                </div>
-              </div>
+              <div className="ta-info-pill ta-info-pill--purple">✦ Claude Sonnet 4.6 · Anthropic API</div>
             </div>
             <div className="ta-agent-info-item">
               <div className="ta-sub-label">Rate Limit Guard</div>
@@ -198,8 +191,10 @@ const ServiceLayer = () => (
         <div className="ta-group-label" style={{ color: '#f59e0b' }}>☕ Spring Boot · Java 21</div>
         <div className="ta-row ta-row--gap">
           <div className="ta-card ta-card--blue ta-card--flex">
-            <div className="ta-card-icon">🔍</div>
-            <div className="ta-card-name">SAP Query</div>
+            <div className="ta-card-header-row">
+              <div className="ta-card-icon">🔍</div>
+              <div className="ta-card-name">SAP Query</div>
+            </div>
             <div className="ta-card-sub">Read-only access</div>
             <div className="ta-card-chips">
               <span className="ta-chip">Hotels</span>
@@ -209,8 +204,10 @@ const ServiceLayer = () => (
             </div>
           </div>
           <div className="ta-card ta-card--blue ta-card--flex">
-            <div className="ta-card-icon">✏️</div>
-            <div className="ta-card-name">SAP Updater</div>
+            <div className="ta-card-header-row">
+              <div className="ta-card-icon">✏️</div>
+              <div className="ta-card-name">SAP Updater</div>
+            </div>
             <div className="ta-card-sub">Write / mutate</div>
             <div className="ta-card-chips">
               <span className="ta-chip">Create</span>
@@ -232,8 +229,10 @@ const ServiceLayer = () => (
             { icon: '🔐', name: 'IAM Client',    sub: 'Identity layer',  port: ':8086' },
           ].map(s => (
             <div key={s.name} className="ta-card ta-card--teal ta-card--flex">
-              <div className="ta-card-icon">{s.icon}</div>
-              <div className="ta-card-name">{s.name}</div>
+              <div className="ta-card-header-row">
+                <div className="ta-card-icon">{s.icon}</div>
+                <div className="ta-card-name">{s.name}</div>
+              </div>
               <div className="ta-card-sub">{s.sub}</div>
               <div className="ta-card-chips">
                 <span className="ta-chip ta-chip--port">{s.port}</span>
@@ -257,48 +256,46 @@ const DataLayer = () => (
 
       {/* MongoDB */}
       <div className="ta-card ta-card--green ta-card--flex">
-        <div className="ta-card-icon">🍃</div>
-        <div className="ta-card-name">MongoDB</div>
+        <div className="ta-card-header-row">
+          <div className="ta-card-icon">🍃</div>
+          <div className="ta-card-name">MongoDB</div>
+        </div>
         <div className="ta-card-sub">aura_db · :27017</div>
         <div className="ta-card-chips">
-          <span className="ta-chip">agent_runs collection</span>
-          <span className="ta-chip">run state + status</span>
+          <span className="ta-chip">agent_runs</span>
+          <span className="ta-chip">run state</span>
           <span className="ta-chip">agent outputs</span>
-          <span className="ta-chip">ticket payload</span>
         </div>
-        <div className="ta-card-note">Persists across restarts · used by all API endpoints</div>
       </div>
 
       {/* Jira Cloud (integration target) */}
       <div className="ta-card ta-card--jira ta-card--flex">
-        <div className="ta-card-icon">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="#2684ff">
-            <path d="M11.571 11.513H0a5.218 5.218 0 0 0 5.232 5.215h2.13v2.057A5.215 5.215 0 0 0 12.575 24V12.518a1.005 1.005 0 0 0-1.004-1.005zm5.723-5.756H5.757a5.215 5.215 0 0 0 5.232 5.215h2.13v2.057A5.215 5.215 0 0 0 18.298 18.3V6.762a1.005 1.005 0 0 0-1.004-1.005zm5.701-5.757H11.48a5.215 5.215 0 0 0 5.215 5.215h2.13v2.04A5.215 5.215 0 0 0 24 12.47V1.005A1.005 1.005 0 0 0 22.995 0z" />
-          </svg>
+        <div className="ta-card-header-row">
+          <div className="ta-card-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="#2684ff">
+              <path d="M11.571 11.513H0a5.218 5.218 0 0 0 5.232 5.215h2.13v2.057A5.215 5.215 0 0 0 12.575 24V12.518a1.005 1.005 0 0 0-1.004-1.005zm5.723-5.756H5.757a5.215 5.215 0 0 0 5.232 5.215h2.13v2.057A5.215 5.215 0 0 0 18.298 18.3V6.762a1.005 1.005 0 0 0-1.004-1.005zm5.701-5.757H11.48a5.215 5.215 0 0 0 5.215 5.215h2.13v2.04A5.215 5.215 0 0 0 24 12.47V1.005A1.005 1.005 0 0 0 22.995 0z" />
+            </svg>
+          </div>
+          <div className="ta-card-name">Jira Cloud</div>
         </div>
-        <div className="ta-card-name">Jira Cloud</div>
         <div className="ta-card-sub">atlassian.net · write-back</div>
         <div className="ta-card-chips">
-          <span className="ta-chip ta-chip--jira">transition_in_progress</span>
-          <span className="ta-chip ta-chip--jira">transition_done</span>
-          <span className="ta-chip">add_comment × 8</span>
-          <span className="ta-chip">ADF → plain text</span>
+          <span className="ta-chip ta-chip--jira">transition</span>
+          <span className="ta-chip">comment × 8</span>
+          <span className="ta-chip">fire-and-forget</span>
         </div>
-        <div className="ta-card-note">Fire-and-forget — Jira outage never blocks agents</div>
       </div>
 
       {/* Anthropic API */}
       <div className="ta-card ta-card--purple ta-card--flex">
-        <div className="ta-card-icon">✦</div>
-        <div className="ta-card-name">Anthropic API</div>
+        <div className="ta-card-header-row">
+          <div className="ta-card-icon">✦</div>
+          <div className="ta-card-name">Anthropic API</div>
+        </div>
         <div className="ta-card-sub">Claude Sonnet 4.6</div>
         <div className="ta-card-chips">
-          <span className="ta-chip">8 agent calls / run</span>
-          <span className="ta-chip">500-char desc cap</span>
-          <span className="ta-chip">429 retry backoff</span>
-          <span className="ta-chip">ANTHROPIC_API_KEY</span>
+          <span className="ta-chip">8 calls / run</span>
         </div>
-        <div className="ta-card-note">Description truncated at 500 chars to control token usage</div>
       </div>
 
     </div>
@@ -320,6 +317,7 @@ const StackSummary = () => {
   ]
   return (
     <div className="ta-stack-summary">
+      <div className="ta-stack-title">Tech Stack</div>
       {items.map(i => (
         <div key={i.label} className="ta-stack-row">
           <span className="ta-stack-label" style={{ color: i.color }}>{i.label}</span>
