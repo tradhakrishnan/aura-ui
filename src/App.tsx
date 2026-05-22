@@ -319,12 +319,14 @@ function DisclaimerPage() {
 function App() {
   const [page, setPage]                   = useState<Page>('home')
   const [selectedRunId, setSelectedRunId] = useState<string | undefined>()
+  const [runKey, setRunKey]               = useState(0)
   const [llmConfig, setLlmConfig]         = useState<LlmConfig | null>(null)
 
   useEffect(() => { getLlmConfig().then(setLlmConfig) }, [])
 
   const openRun = (runId?: string) => {
     setSelectedRunId(runId)
+    setRunKey(k => k + 1)
     setPage('run')
   }
 
@@ -344,7 +346,7 @@ function App() {
         {page === 'jira'         && <JiraIssues onRunAgent={(runId) => openRun(runId)} />}
         {page === 'disclaimer'   && <DisclaimerPage />}
         {page === 'status'       && <TicketStatus onViewRun={(runId) => openRun(runId)} onBack={goHome} />}
-        {page === 'run'          && <AgentRun initialRunId={selectedRunId} onBack={goHome} onJira={() => setPage('jira')} onStatus={() => setPage('status')} />}
+        {page === 'run'          && <AgentRun key={runKey} initialRunId={selectedRunId} onBack={goHome} onJira={() => setPage('jira')} onStatus={() => setPage('status')} />}
       </main>
       <DisclaimerBanner onNav={setPage} />
     </div>

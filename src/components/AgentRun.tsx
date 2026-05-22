@@ -56,14 +56,14 @@ const DEMO_TICKETS: { label: string; form: TicketPayload }[] = [
     form: {
       ticket_id: `INC${Math.floor(100000 + Math.random() * 900000)}`,
       source: 'Manual',
-      title: 'Hotel code PARBA missing for the control location QCMG1G',
+      title: 'Hotel code 7L0NF5RH missing for the control location UWABWJ',
       description:
-        'Hotel PARBA is expected to be listed under control location QCMG1G but is not present in the controlled hotels array. ' +
+        'Hotel 7L0NF5RH is expected to be listed under control location UWABWJ (Transit Business Base 732) but is not present in the controlled hotels array. ' +
         'This is causing downstream assignment failures for properties in that region.',
       severity: 'High',
-      affected_system: 'TAP',
-      affected_hotel: 'PARBA',
-      affected_location: 'QCMG1G',
+      affected_system: 'SAP',
+      affected_hotel: '7L0NF5RH',
+      affected_location: 'UWABWJ',
       affected_eid: '',
       reported_by: 'ops-team',
     },
@@ -73,15 +73,15 @@ const DEMO_TICKETS: { label: string; form: TicketPayload }[] = [
     form: {
       ticket_id: `INC${Math.floor(100000 + Math.random() * 900000)}`,
       source: 'Manual',
-      title: 'User GPBGY085 missing CRS-1 app assignment',
+      title: 'User 3C9MTEX2 missing CRS-1 app assignment',
       description:
-        'User GPBGY085 does not have an active CRS-1 application assignment. ' +
+        'User 3C9MTEX2 does not have an active CRS-1 application assignment. ' +
         'They are unable to log into the reservation system and impacting check-in operations at 3 properties.',
       severity: 'Critical',
-      affected_system: 'CRS-1',
+      affected_system: 'CRS1',
       affected_hotel: '',
       affected_location: '',
-      affected_eid: 'GPBGY085',
+      affected_eid: '3C9MTEX2',
       reported_by: 'helpdesk',
     },
   },
@@ -90,13 +90,13 @@ const DEMO_TICKETS: { label: string; form: TicketPayload }[] = [
     form: {
       ticket_id: `INC${Math.floor(100000 + Math.random() * 900000)}`,
       source: 'Manual',
-      title: 'Inactive hotel XZADS blocking TAP location sync',
+      title: 'Inactive hotel 63H8C3ZJ blocking CRS-2 location sync',
       description:
-        'Hotel XZADS has status Inactive in TAP but is still referenced in the CRS-2 assignment feed. ' +
+        'Hotel 63H8C3ZJ has status Inactive in SAP but is still referenced in the CRS-2 assignment feed. ' +
         'This is causing sync errors and preventing nightly reconciliation from completing.',
       severity: 'Medium',
-      affected_system: 'CRS-2',
-      affected_hotel: 'XZADS',
+      affected_system: 'CRS2',
+      affected_hotel: '63H8C3ZJ',
       affected_location: '',
       affected_eid: '',
       reported_by: 'integration-team',
@@ -699,9 +699,9 @@ export default function AgentRun({ initialRunId, onBack, onJira, onStatus }: Age
   /* ── Prompt view — describe issue in plain language ─────────────────────── */
   if (view === 'prompt') {
     const PROMPT_DEMOS = [
-      { label: 'Hotel missing from location', text: 'Hotel code PARBA is expected to be listed under control location QCMG1G but is not present in the controlled hotels array. This is causing downstream assignment failures for properties in that region.' },
-      { label: 'User EID missing app assignment', text: 'User GPBGY085 does not have an active CRS-1 application assignment. They are unable to log into the reservation system and impacting check-in operations at 3 properties.' },
-      { label: 'Inactive hotel blocking sync', text: 'Hotel SUXAK is marked as inactive in CRS-2 but still appearing in the MITE sync queue causing repeated sync failures for the last 6 hours.' },
+      { label: 'Hotel missing from location', text: 'Hotel code 7L0NF5RH is expected to be listed under control location UWABWJ (Transit Business Base 732) but is not present in the controlled hotels array. This is causing downstream assignment failures for properties in that region.' },
+      { label: 'User EID missing app assignment', text: 'User 3C9MTEX2 does not have an active CRS-1 application assignment. They are unable to log into the reservation system and impacting check-in operations at 3 properties.' },
+      { label: 'Inactive hotel blocking sync', text: 'Hotel 63H8C3ZJ is marked as inactive in SAP but is still referenced in the CRS-2 assignment feed causing sync errors and preventing nightly reconciliation from completing.' },
     ]
     return (
       <div className="ar-page">
