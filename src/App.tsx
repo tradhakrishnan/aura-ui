@@ -242,6 +242,26 @@ function TeamPage() {
           </p>
         </div>
 
+        {/* Mentor */}
+        <div className="team-mentor-wrap">
+          <div className="team-mentor-label">Mentor &amp; Senior Advisor</div>
+          <div className="team-mentor-card">
+            <div className="team-mentor-icon">🌟</div>
+            <div className="team-mentor-info">
+              <div className="team-mentor-name">Paul</div>
+              <div className="team-mentor-desc">
+                Provided full guidance, strategic direction, and mentorship throughout the project.
+                Reviewed architecture decisions, fine-tuned application design, and ensured
+                alignment with Marriott's engineering standards.
+              </div>
+            </div>
+            <div className="team-mentor-badges">
+              <span className="team-mentor-badge">Architecture Review</span>
+              <span className="team-mentor-badge">Strategic Guidance</span>
+            </div>
+          </div>
+        </div>
+
         {/* Engineering team */}
         <div className="team-eng-label">Engineering Team</div>
         <div className="team-grid">
